@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.28)
-project(CMakeSFMLProject LANGUAGES CXX)
+project(GGoldrush LANGUAGES CXX)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 option(BUILD_SHARED_LIBS "Build shared libraries" OFF)
@@ -13,7 +13,20 @@ FetchContent_Declare(SFML
     SYSTEM)
 FetchContent_MakeAvailable(SFML)
 
-add_executable(main src/main.cpp)
+add_executable(main 
+    src/gui/box/Box.cpp
+    src/gui/button/GenericButton.cpp
+    src/gui/button/PlainButton.cpp
+    src/gui/container/Container.cpp
+    src/gui/view/ViewBase.cpp
+    src/gui/view/View.cpp
+    src/main.cpp
+)
+
+target_include_directories(main PRIVATE 
+    ${CMAKE_SOURCE_DIR}/src
+)
+
 target_link_libraries(main PRIVATE sfml-graphics)
 target_compile_features(main PRIVATE cxx_std_17)
 
