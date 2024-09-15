@@ -5,6 +5,8 @@
 #include <gui/view/View.hpp>
 #include <gui/common/events.hpp>
 
+
+
 int main() {
     auto window = sf::RenderWindow{ { 1920u/2, 1080u/2 }, "Some GProject" };
     window.setFramerateLimit(60);
@@ -12,6 +14,7 @@ int main() {
     std::cout << "Starting" << std::endl;
 
     gui::View view(window);
+    gui::ClickEventsExtractor clicEventsExtractor;
 
     while (window.isOpen()) {
         for (auto event = sf::Event{}; window.pollEvent(event);) {
@@ -20,17 +23,15 @@ int main() {
                 window.close();
             } 
             else {
-                if ((event.type == sf::Event::MouseButtonPressed) || (event.type == sf::Event::MouseButtonReleased)) {
-                    
-                    const auto mousePosition = sf::Mouse::getPosition(window);
 
-                    const auto clickEventType = event.type == sf::Event::MouseButtonPressed 
-                        ? gui::ClickEvent::Type::PRESSED : gui::ClickEvent::Type::RELEASED;
+                /* Extract GUI events from common events */
+                const auto mousePosition = sf::Mouse::getPosition(window);
 
-                    const gui::ClickEvent clickEvent(clickEventType, mousePosition);
-
-                    view.processEvents(clickEvent);
+                const auto clickEventResult = clicEventsExtractor.extract(event, mousePosition);
+                if (clickEventResult.has_value()) {
+                    view.processEvents(clickEventResult.value());
                 }
+
             }
 
         }

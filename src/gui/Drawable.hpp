@@ -31,8 +31,9 @@ namespace gui {
             setHeight(height);
         }
 
-        bool isPointInside(float px, float py) {
-            return (px >= getX()) && (px < (getX() + getWidth())) && (py >= getY()) && (py < (getY() + getHeight()));
+        bool isPointInsideGlobally(float gloabl_x, float gloabl_y) {
+            return (gloabl_x >= getGloblX()) && (gloabl_x < (getGloblX() + getWidth())) 
+                && (gloabl_y >= getGlobalY()) && (gloabl_y < (getGlobalY() + getHeight()));
         }
 
         virtual void setX(float x) = 0;

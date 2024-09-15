@@ -14,7 +14,7 @@ namespace gui {
         View(const sf::RenderWindow& window);
 
     protected:
-        virtual void onButtonClicked(gui::GenericButton* button) override {}
+        void onButtonClicked(gui::GenericButton* button) override;
 
     private:
         gui::Container cnt1;

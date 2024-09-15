@@ -12,7 +12,7 @@ namespace gui {
 
         const float offset = 16;
 
-        cnt1.setPosition(offset,offset,getWidth() - 2 * offset, 180);
+        cnt1.setPosition(offset,offset,getWidth() - 2 * offset, 120);
         add(&cnt1);
 
         box1.setPosition(0,0,cnt1.getWidth(), cnt1.getHeight());
@@ -27,4 +27,7 @@ namespace gui {
         std::cout << "btn1: " << btn1 << std::endl;
     }
     
+    void View::onButtonClicked(gui::GenericButton* button) {
+        std::cout << "Button clicked: " << *button << std::endl;
+    }
 }

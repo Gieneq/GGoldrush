@@ -38,7 +38,13 @@ namespace gui {
             return touchable;
         }
 
+        bool isPressed() const {
+            return pressed;
+        }
+
     protected:
+        virtual void uponHover() {}
+
         virtual void uponPress() {}
 
         virtual void uponRelease() {}
@@ -49,6 +55,8 @@ namespace gui {
         bool visible;
 
         bool touchable;
+
+        bool pressed;
     };
 
 
