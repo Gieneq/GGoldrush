@@ -8,6 +8,10 @@ namespace gui {
         target.draw(shape);
     }
 
+    void PlainButton::uponHover() {
+
+    }
+
     void PlainButton::uponPress() {
         shape.setFillColor(pressedColor);
     }

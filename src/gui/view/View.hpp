@@ -5,6 +5,7 @@
 #include <gui/view/ViewBase.hpp>
 
 #include <gui/button/PlainButton.hpp>
+#include <gui/button/PlainTextButton.hpp>
 #include <gui/box/Box.hpp>
 
 namespace gui {
@@ -19,6 +20,7 @@ namespace gui {
     private:
         gui::Container cnt1;
         gui::PlainButton btn1;
+        gui::PlainTextButton btn2;
         gui::Box box1;
     };
     

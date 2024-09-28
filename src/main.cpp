@@ -4,6 +4,7 @@
 
 #include <gui/view/View.hpp>
 #include <gui/common/events.hpp>
+#include <gui/font/FontManger.hpp>
 
 
 

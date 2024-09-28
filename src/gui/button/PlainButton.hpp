@@ -12,7 +12,7 @@ namespace gui {
             uponRelease();
         }
 
-        void draw(sf::RenderWindow& target) override;
+        virtual void draw(sf::RenderWindow& target) override;
     
         virtual void setParent(Drawable* parent) override {
             Drawable::setParent(parent);
@@ -66,11 +66,14 @@ namespace gui {
             pressedColor = color;
         }
 
+    protected:
+        virtual void uponHover() override;
+        
+        virtual void uponPress() override;
+
+        virtual void uponRelease() override;
+
     private:
-        void uponPress() override;
-
-        void uponRelease() override;
-
         sf::Vector2f localPosition;
 
         sf::RectangleShape shape;

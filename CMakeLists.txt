@@ -15,11 +15,18 @@ FetchContent_MakeAvailable(SFML)
 
 add_executable(main 
     src/gui/box/Box.cpp
+
     src/gui/button/GenericButton.cpp
     src/gui/button/PlainButton.cpp
+    src/gui/button/PlainTextButton.cpp
+
     src/gui/container/Container.cpp
+
+    src/gui/font/FontManger.cpp
+
     src/gui/view/ViewBase.cpp
     src/gui/view/View.cpp
+
     src/main.cpp
 )
 
@@ -29,6 +36,22 @@ target_include_directories(main PRIVATE
 
 target_link_libraries(main PRIVATE sfml-graphics)
 target_compile_features(main PRIVATE cxx_std_17)
+
+# Variables for source and destination paths
+set(RES_SOURCE_DIR ${CMAKE_SOURCE_DIR}/res)
+
+# same as CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Debug/res for Debug 
+set(RES_DEST_DIR $<TARGET_FILE_DIR:main>/res)
+
+# Custom command to copy the "res" directory to the output directory
+add_custom_command(
+    TARGET main
+    POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${RES_SOURCE_DIR}
+        ${RES_DEST_DIR}
+    COMMAND ${CMAKE_COMMAND} -E echo "Resource (res) files copied from: ${RES_SOURCE_DIR} to: ${RES_DEST_DIR}"
+)
 
 if(WIN32)
     add_custom_command(
