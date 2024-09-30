@@ -14,6 +14,11 @@ FetchContent_Declare(SFML
 FetchContent_MakeAvailable(SFML)
 
 add_executable(main 
+    src/assets/AssetsManager.cpp
+
+    src/world/Tile.cpp
+    src/world/World.cpp
+    
     src/gui/box/Box.cpp
 
     src/gui/button/GenericButton.cpp

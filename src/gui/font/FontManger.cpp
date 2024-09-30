@@ -1,5 +1,6 @@
 #include "FontManger.hpp"
 #include <iostream>
+#include <exception>
 #include <filesystem>
 
 
@@ -11,6 +12,28 @@ namespace gui {
         loadFont(robotoRegular, "res/fonts/Roboto_Regular.ttf");
         loadFont(robotoMedium,  "res/fonts/Roboto_Medium.ttf");
         loadFont(robotoBold,    "res/fonts/Roboto_Bold.ttf");
+    }
+
+    sf::Font& FontManager::getFont(Style style) {
+        switch (style) {
+        case LATO_REGULAR:
+            return latoRegular;
+
+        case ROBOTO_LIGHT:
+            return robotoLight;
+
+        case ROBOTO_REGULAR:
+            return robotoRegular;
+
+        case ROBOTO_MEDIUM:
+            return robotoMedium;
+
+        case ROBOTO_BOLD:
+            return robotoBold;
+
+        default:
+            throw std::invalid_argument("Invalid font style");
+        }
     }
 
     void FontManager::loadFont(sf::Font& font, const std::string& filepath) {

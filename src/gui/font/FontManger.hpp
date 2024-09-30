@@ -20,24 +20,7 @@ namespace gui {
         FontManager(const FontManager&) = delete;
         FontManager& operator=(const FontManager&) = delete;
 
-        sf::Font& getFont(Style style) {
-            switch (style) {
-            case LATO_REGULAR:
-                return latoRegular;
-
-            case ROBOTO_LIGHT:
-                return robotoLight;
-
-            case ROBOTO_REGULAR:
-                return robotoRegular;
-
-            case ROBOTO_MEDIUM:
-                return robotoMedium;
-
-            case ROBOTO_BOLD:
-                return robotoBold;
-            }
-        }
+        sf::Font& getFont(Style style);
 
         static FontManager& getInstance() {
             static FontManager instance;
