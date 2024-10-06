@@ -16,9 +16,11 @@ FetchContent_MakeAvailable(SFML)
 add_executable(main 
     src/assets/AssetsManager.cpp
 
+    src/world/Object.cpp
     src/world/Tile.cpp
     src/world/World.cpp
     src/world/Camera.cpp
+    src/world/Picker.cpp
     
     src/gui/box/Box.cpp
 

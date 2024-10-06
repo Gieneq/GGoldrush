@@ -16,19 +16,30 @@ namespace world {
 
     void World::draw(sf::RenderWindow& target) {
         int cnt = 0;
-        for (const auto& tile: allTiles) {
+        for (const auto& tile: groundTiles) {
             tile->draw(target);
-            // std::cout << "Tile " << cnt++ << ", " << tile->tileIdx 
-            //     << "[" << tile->sprite.getGlobalBounds().left << ", " << tile->sprite.getGlobalBounds().top << "; " 
-            //     << tile->sprite.getGlobalBounds().width << ", " << tile->sprite.getGlobalBounds().height << "]" << std::endl;
         }
+    }
+
+    void World::processEvents(const sf::Event& event, const sf::Vector2i& mousePosition) {
+        camera.processEvents(event, mousePosition);
+
+        picker.prepareCheck();
+
+        //big objects first 
+        for (auto tile : groundTiles) {
+            picker.addSelectable(tile);
+        }
+        // picker.addSelectable(groundTiles[0]);
+
+        const auto mouseCameraPosition = camera.transformScrenToCameraSpace(mousePosition);
+        picker.processEvents(event, mouseCameraPosition);
     }
 
     Tile* World::createTile(const sf::Vector2i& gridPosition, const assets::Tileset* const tileset, const size_t tileIdx) {
         const auto newTile = new Tile(gridPosition, tileset, tileIdx, 225);
-        // newTile->
 
-        allTiles.push_back(newTile);
+        groundTiles.push_back(newTile);
 
         return newTile;
     }

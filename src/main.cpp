@@ -55,7 +55,7 @@ int main() {
                 }
 
                 /* Other events */
-                world.getCamera().processEvents(event, mouseScreenPosition);
+                world.processEvents(event, mouseScreenPosition);
             }
 
         }
