@@ -14,10 +14,10 @@ namespace gui {
         
         void add(Drawable* drawable);
         
-        virtual void tick() {
+        virtual void tick(float dt) {
             if (isVisible()) {
                 for (auto drawable: drawables) {
-                    drawable->tick();
+                    drawable->tick(dt);
                 }
             }
         }

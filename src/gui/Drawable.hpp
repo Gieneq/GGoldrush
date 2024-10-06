@@ -17,7 +17,7 @@ namespace gui {
             this->parent = parent;
         }
         
-        virtual void tick() {}
+        virtual void tick(float dt) {}
 
         virtual void draw(sf::RenderWindow& target) = 0;
         

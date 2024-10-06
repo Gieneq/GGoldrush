@@ -18,6 +18,7 @@ add_executable(main
 
     src/world/Tile.cpp
     src/world/World.cpp
+    src/world/Camera.cpp
     
     src/gui/box/Box.cpp
 
@@ -31,6 +32,8 @@ add_executable(main
 
     src/gui/view/ViewBase.cpp
     src/gui/view/View.cpp
+
+    src/gui/Debug.cpp
 
     src/main.cpp
 )

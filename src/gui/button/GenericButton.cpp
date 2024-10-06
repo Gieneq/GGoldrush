@@ -11,7 +11,7 @@ namespace gui {
     void GenericButton::processEvents(const gui::ClickEvent& event) {
         if (isVisible() && isTouchable()) {
 
-            std::cout << event << std::endl;
+            // std::cout << event << std::endl;
 
             if (isPointInsideGlobally(event.mousePosition.x, event.mousePosition.y)) {
                 

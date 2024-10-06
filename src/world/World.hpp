@@ -5,7 +5,8 @@
 #include <vector>
 
 #include "Camera.hpp"
-#include "assets/AssetsManager.hpp"
+#include <assets/AssetsManager.hpp>
+#include <common/Properties.hpp>
 
 namespace world {
 
@@ -17,7 +18,7 @@ namespace world {
         World(const World&) = delete;
         World& operator=(const World&) = delete;
 
-        void tick();
+        void tick(float dt);
 
         void draw(sf::RenderWindow& target);
 

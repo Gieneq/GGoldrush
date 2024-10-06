@@ -60,9 +60,6 @@ namespace gui {
             switch (event.type) {
 
             case sf::Event::MouseButtonPressed: {
-
-                // std::cout << "MMp " << event.mouseButton.x << "/ " << event.mouseButton.y << std::endl;
-                
                 /* Detect LMB events */
                 if (event.mouseButton.button == sf::Mouse::Button::Left) {
                     recentlyLMBPressed = true;
@@ -74,9 +71,6 @@ namespace gui {
             }
 
             case sf::Event::MouseButtonReleased: {
-
-                // std::cout << "MMr " << event.mouseButton.x << "/ " << event.mouseButton.y << std::endl;
-
                 /* Detect LMB events */
                 if (event.mouseButton.button == sf::Mouse::Button::Left) {
                     recentlyLMBPressed = false;
@@ -87,9 +81,6 @@ namespace gui {
             }
 
             case sf::Event::MouseMoved: {
-
-                // std::cout << "MM " << event.mouseMove.x << "/ " << event.mouseMove.y << std::endl;
-
                 if (recentlyLMBPressed) {
                     const auto deltaMousePosition = mousePosition - lastLMBPressedMousePosition;
                     return std::make_optional<gui::ClickEvent>(gui::ClickEvent::Type::DRAG, mousePosition);

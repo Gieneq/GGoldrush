@@ -20,7 +20,7 @@ namespace gui {
     }
         
     void PlainTextButton::centerLabelTextInButton() {
-         std::cout <<"Here >>>> GlobX: " << getGloblX() << ", Y: " << getGlobalY() << ", Wh: " << getWidth() << ", " << getHeight() << std::endl;
+        //  std::cout <<"Here >>>> GlobX: " << getGloblX() << ", Y: " << getGlobalY() << ", Wh: " << getWidth() << ", " << getHeight() << std::endl;
         label.setPosition(
             getGloblX() + (getWidth() - label.getLocalBounds().width) / 2.0F - label.getLocalBounds().left,
             getGlobalY() + (getHeight() - label.getLocalBounds().height) / 2.0F - label.getLocalBounds().top
@@ -34,9 +34,6 @@ namespace gui {
     void PlainTextButton::uponPress() {
         PlainButton::uponPress();
         label.setColor(pressedTextColor);
-        // std::cout <<"BT: " << label.getLocalBounds().left << ", " << label.getLocalBounds().top << ". " << label.getLocalBounds().width << ", " << label.getLocalBounds().height << ", glob:";
-        // std::cout <<"  " << label.getGlobalBounds().left << ", " << label.getGlobalBounds().top << ". " << label.getGlobalBounds().width << ", " << label.getGlobalBounds().height << std::endl;
-        // std::cout <<"GlobX: " << getGloblX() << ", Y: " << getGlobalY() << ", Wh: " << getWidth() << ", " << getHeight() << std::endl;
     }
 
     void PlainTextButton::uponRelease() {

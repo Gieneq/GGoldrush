@@ -10,8 +10,8 @@ namespace world {
         buildTest();
     }
 
-    void World::tick() {
-
+    void World::tick(float dt) {
+        camera.tick(dt);
     }
 
     void World::draw(sf::RenderWindow& target) {
