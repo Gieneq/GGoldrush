@@ -25,7 +25,7 @@ namespace world {
     }
 
     Tile* World::createTile(const sf::Vector2i& gridPosition, const assets::Tileset* const tileset, const size_t tileIdx) {
-        const auto newTile = new Tile(gridPosition, tileset, tileIdx);
+        const auto newTile = new Tile(gridPosition, tileset, tileIdx, 225);
         // newTile->
 
         allTiles.push_back(newTile);
