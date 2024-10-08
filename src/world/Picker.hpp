@@ -43,11 +43,17 @@ namespace world {
             selectablesCache.push_back(sel);
         }
 
+
         void processEvents(const sf::Event& event, const sf::Vector2f& mouseCameraPosition);
 
-
     private:
+        SelectableObject* findSelectableObjectByMouseCameraPosition(const sf::Vector2f& mouseCameraPosition);
+        
+        bool isSelectableObjectInsideBatch(SelectableObject* selectableObject);
+
         std::vector<SelectableObject*> selectablesCache;
+        SelectableObject* selectedRecently{nullptr};
+        SelectableObject* hoveredRecently{nullptr};
         
     };
 

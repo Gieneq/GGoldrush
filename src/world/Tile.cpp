@@ -55,9 +55,21 @@ namespace world {
         if (!box.contains(mouseCameraPosition)) {
             return false;
         }
-        // std::cout << box.left << ", " << box.top << ", " << box.width << ", " << box.height << " Mouse: " << mouseCameraPosition << std::endl;
+        
+        const sf::IntRect& textureRect = mainSprite.getTextureRect();
+        const auto mousePositionInsideTextureRect = static_cast<sf::Vector2i>(box.getPosition() - mouseCameraPosition);
+        const auto pixelCoord = textureRect.getPosition() - mousePositionInsideTextureRect;
+        
+        // Get the pixel data (RGBA) from the texture
+        const sf::Image& image = mainSprite.getTexture()->copyToImage();
+        sf::Color pixelColor = image.getPixel(pixelCoord.x, pixelCoord.y);
 
-        return true; //TODO
+        // std::cout << "Sample pixel: " << pixelCoord << " alpha=" << (int)(pixelColor.a) << std::endl; 
+        if (pixelColor.a == 0) {
+            return false;
+        }
+
+        return true;
     }
 
 }
