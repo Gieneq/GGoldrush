@@ -1,4 +1,4 @@
-#include "Tile.hpp"
+#include "Structure.hpp"
 
 #include <iostream>
 #include <exception>
@@ -9,46 +9,35 @@
 
 namespace world {
 
-    Tile::Tile(const sf::Vector2i& gridPosition, const assets::Tileset* const tileset, size_t tileIndexTop, std::optional<size_t> tileIndexWalls) 
-        : world::Object(gridPosition, tileset, tileIndexTop), tileIndexWalls{tileIndexWalls} {
+    Structure::Structure(const sf::Vector2i& gridPosition, const assets::Tileset* const tileset, size_t tileIndex) 
+        : world::Object(gridPosition, tileset, tileIndex) {
 
         const auto worldPosition = world::Camera::gridToWorldSpace(gridPosition);
         const auto cameraPosition = world::Camera::worldToCameraSpace(worldPosition);
 
         /* Top of tile */
-        if (tileset->getTileSize().x != props::BASE_TILESIZE.x || tileset->getTileSize().y != props::BASE_TILESIZE.y) {
-            throw std::invalid_argument("Tileset tilesize not equal base size");
-        }
-
-        /* Walls of tile */
-        spriteWalls.setOrigin({tileset->getTileSize().x / 2.0F, mainSprite.getOrigin().y - tileset->getTileSize().y / 2.0F});
-        spriteWalls.setPosition(cameraPosition);
-        spriteWalls.setTexture(tileset->getTexture());
-        if (tileIndexWalls.has_value()) {
-            spriteWalls.setTextureRect(tileset->getTileRectByIndex(tileIndexWalls.value()));
+        if ((tileset->getTileSize().x % props::BASE_TILESIZE.x != 0) || (tileset->getTileSize().y % props::BASE_TILESIZE.y != 0)) {
+            throw std::invalid_argument("Tileset tilesize not equal n * base size");
         }
     }
 
-    void Tile::draw(sf::RenderWindow& target) {
-        if (tileIndexWalls.has_value()) {
-            target.draw(spriteWalls);
-        }
+    void Structure::draw(sf::RenderWindow& target) {
         Object::draw(target);
     }
     
-    void Tile::onHover() {
+    void Structure::onHover() {
         mainSprite.setColor(sf::Color(255, 200, 200, 255));
     }
 
-    void Tile::onSelect() {
+    void Structure::onSelect() {
         mainSprite.setColor(sf::Color(255, 128, 128, 255));
     }
     
-    void Tile::onNormal() {
+    void Structure::onNormal() {
         mainSprite.setColor(sf::Color(255, 255, 255, 255));
     }
 
-    bool Tile::isMouseInsideShape(const sf::Vector2f& mouseCameraPosition) {
+    bool Structure::isMouseInsideShape(const sf::Vector2f& mouseCameraPosition) {
         const auto box = mainSprite.getGlobalBounds();
 
         /* Fast */
@@ -72,7 +61,8 @@ namespace world {
         return true;
     }
 
-    std::string Tile::toString() const {
-        return "Tile";
+    std::string Structure::toString() const {
+        return "Structure";
     }
+
 }

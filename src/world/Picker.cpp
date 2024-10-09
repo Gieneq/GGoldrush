@@ -4,6 +4,10 @@
 
 namespace world {
  
+    std::string SelectableObject::toString() const {
+        return "SelectableObject(selected=" + std::to_string(isSelected) + ")";
+    }
+
     SelectableObject* Picker::findSelectableObjectByMouseCameraPosition(const sf::Vector2f& mouseCameraPosition) {
         for (auto sel : selectablesCache) {
             if (sel->isMouseInsideShape(mouseCameraPosition)) {
@@ -43,6 +47,7 @@ namespace world {
                 /* Deselect */
                 selectedRecently->isSelected = false;
                 selectedRecently->onNormal();
+                notifyAllOnNormal(selectedRecently);
                 selectedRecently = nullptr;
             }
             else if (selectedRecently != nextSelected) {
@@ -50,6 +55,7 @@ namespace world {
                     /* Deselect */
                     selectedRecently->isSelected = false;
                     selectedRecently->onNormal();
+                    notifyAllOnNormal(selectedRecently);
                     selectedRecently = nullptr;
                 }
 
@@ -57,6 +63,7 @@ namespace world {
                 nextSelected->isSelected = true;
                 nextSelected->onSelect();
                 selectedRecently = nextSelected;
+                notifyAllOnSelect(selectedRecently);
             }
         }
         

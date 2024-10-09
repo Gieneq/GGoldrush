@@ -1,12 +1,15 @@
 #include "World.hpp"
 
 #include <iostream>
+#include <algorithm>
 
 #include "Tile.hpp"
+#include "Structure.hpp"
 
 namespace world {
 
     World::World(const sf::Vector2u& size) : size{size} {
+        picker.addListener(this);
         buildTest();
     }
 
@@ -19,6 +22,14 @@ namespace world {
         for (const auto& tile: groundTiles) {
             tile->draw(target);
         }
+
+        /* Back to front */
+        std::sort(structures.begin(), structures.end(), [](const Structure* s1, const Structure* s2){
+            return s2->getGridPosition().y > s1->getGridPosition().y;
+        });
+        for (const auto& structure: structures) {
+            structure->draw(target);
+        }
     }
 
     void World::processEvents(const sf::Event& event, const sf::Vector2i& mousePosition) {
@@ -26,7 +37,14 @@ namespace world {
 
         picker.prepareCheck();
 
-        //big objects first 
+        /* Front to back */
+        std::sort(structures.begin(), structures.end(), [](const Structure* s1, const Structure* s2){
+            return s1->getGridPosition().y > s2->getGridPosition().y;
+        });
+        for (auto structure : structures) {
+            picker.addSelectable(structure);
+        }
+
         for (auto tile : groundTiles) {
             picker.addSelectable(tile);
         }
@@ -42,6 +60,46 @@ namespace world {
         groundTiles.push_back(newTile);
 
         return newTile;
+    }
+    
+    void World::onSelectableObjectGoSelected(SelectableObject* selObj) {
+        Structure* foundStructure = nullptr;
+        const auto structureIt = std::find(structures.begin(), structures.end(), selObj);
+        if (structureIt != structures.end()) {
+            foundStructure = *structureIt;
+            std::cout << "Selected Structure: " << *foundStructure << std::endl;
+            return;
+        }
+
+        Tile* foundTile = nullptr;
+        const auto tileIt = std::find(groundTiles.begin(), groundTiles.end(), selObj);
+        if (tileIt != groundTiles.end()) {
+            foundTile = *tileIt;
+            std::cout << "Selected Tile: " << *foundTile << std::endl;
+            return;
+        }
+        
+        std::cout << "Selected SelectableObject: " << *selObj << std::endl;
+    }
+
+    void World::onSelectableObjectGoNormal(SelectableObject* selObj) {
+        Structure* foundStructure = nullptr;
+        const auto structureIt = std::find(structures.begin(), structures.end(), selObj);
+        if (structureIt != structures.end()) {
+            foundStructure = *structureIt;
+            std::cout << "Deselected Structure: " << *foundStructure << std::endl;
+            return;
+        }
+
+        Tile* foundTile = nullptr;
+        const auto tileIt = std::find(groundTiles.begin(), groundTiles.end(), selObj);
+        if (tileIt != groundTiles.end()) {
+            foundTile = *tileIt;
+            std::cout << "Deselected Tile: " << *foundTile << std::endl;
+            return;
+        }
+        
+        std::cout << "Deelected SelectableObject: " << *selObj << std::endl;
     }
     
     void World::buildTest() {
@@ -60,6 +118,21 @@ namespace world {
 
             }
         }
+
+        //trees
+        const auto structureTileset = assets::AssetsManager::getInstane().getTileset(assets::AssetId::OBJECTS_1X4);
+
+        const auto newStructure = new Structure({0,0}, structureTileset, 0);
+        structures.push_back(newStructure);
+        
+        const auto newStructure1 = new Structure({0,1}, structureTileset, 0);
+        structures.push_back(newStructure1);
+
+        //sawmill
+        const auto buildingsTileset = assets::AssetsManager::getInstane().getTileset(assets::AssetId::OBJECTS_2X4);
+
+        const auto newBuilding = new Structure({3,0}, buildingsTileset, 0);
+        structures.push_back(newBuilding);
     }
 
 }

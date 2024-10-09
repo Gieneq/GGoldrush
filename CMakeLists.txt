@@ -18,6 +18,7 @@ add_executable(main
 
     src/world/Object.cpp
     src/world/Tile.cpp
+    src/world/Structure.cpp
     src/world/World.cpp
     src/world/Camera.cpp
     src/world/Picker.cpp

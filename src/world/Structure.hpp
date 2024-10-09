@@ -1,7 +1,5 @@
 #pragma once
 
-#include <optional>
-
 #include <SFML/Graphics.hpp>
 
 #include <world/Object.hpp>
@@ -12,9 +10,9 @@ namespace assets {
 
 namespace world {
 
-    class Tile : public world::Object {
+    class Structure : public world::Object {
     friend class World;
-        Tile(const sf::Vector2i& gridPosition, const assets::Tileset* const tileset, size_t tileIndexTop, std::optional<size_t> tileIndexWalls = std::nullopt);
+        Structure(const sf::Vector2i& gridPosition, const assets::Tileset* const tileset, size_t tileIndex);
 
     public:
         virtual void tick() override {}
@@ -30,10 +28,8 @@ namespace world {
         virtual bool isMouseInsideShape(const sf::Vector2f& mouseCameraPosition) override;
 
         virtual std::string toString() const override;
-
+        
     private:
-        sf::Sprite spriteWalls;
-        std::optional<size_t> tileIndexWalls;
     };
 
 }

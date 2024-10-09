@@ -12,8 +12,9 @@
 namespace world {
 
     class Tile;
+    class Structure;
 
-    class World {
+    class World : SelectableObjectListener {
     public:
         World(const sf::Vector2u& size);
         World(const World&) = delete;
@@ -32,11 +33,16 @@ namespace world {
         Tile* createTile(const sf::Vector2i& gridPosition, const assets::Tileset* const tileset, const size_t tileIdx);
 
     private:
+        void onSelectableObjectGoSelected(SelectableObject* selObj) override;
+        void onSelectableObjectGoNormal(SelectableObject* selObj) override;
+
         void buildTest();
 
         Camera camera;
 
         sf::Vector2u size;
+
+        std::vector<Structure*> structures;
 
         std::vector<Tile*> groundTiles;
 

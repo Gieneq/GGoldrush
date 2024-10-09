@@ -23,10 +23,17 @@ namespace world {
 
         virtual void draw(sf::RenderWindow& target);
 
+        const sf::Vector2i& getGridPosition() const {
+            return gridPosition;
+        }
+
+        virtual std::string toString() const override;
+
     protected:
         sf::Sprite mainSprite; 
         const assets::Tileset* const mainTileset;
         size_t mainTileIndex;
+        sf::Vector2i gridPosition;
     };
 
 }

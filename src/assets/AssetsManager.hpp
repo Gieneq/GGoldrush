@@ -10,6 +10,8 @@ namespace assets {
      */
     enum AssetId {
         COMMON,
+        OBJECTS_1X4,
+        OBJECTS_2X4,
         OBJECTS_2X2,
         OBJECTS_3X3,
     };
@@ -32,11 +34,16 @@ namespace assets {
             return tileSize;
         }
 
+        const int getYOffset() const {
+            return yOffset;
+        }
+
         sf::IntRect getTileRectByIndex(unsigned int tileIndex) const;
 
     private:
         const sf::Texture& texture;
         const sf::Vector2u tileSize;
+        int yOffset;
 
         friend class AssetsManager;
     };
@@ -67,6 +74,12 @@ namespace assets {
 
         sf::Texture textureCommon;
         Tileset* tilesetCommon;
+        
+        sf::Texture textureObjects1x4;
+        Tileset* tilesetObjects1x4;
+        
+        sf::Texture textureObjects2x4;
+        Tileset* tilesetObjects2x4;
         
         sf::Texture textureObjects2x2;
         Tileset* tilesetObjects2x2;

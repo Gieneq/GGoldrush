@@ -9,14 +9,21 @@ namespace assets {
 
     Tileset::Tileset(const sf::Texture& texture, const sf::Vector2u& tileSize) : texture(texture), tileSize(tileSize) {
         if (texture.getSize().x % tileSize.x != 0) {
-            throw std::invalid_argument("Texture width (" + std::to_string(texture.getSize().x) +
-                                        ") is not divisible by tile width (" + std::to_string(tileSize.x) + ")");
+            const std::string err_msg = "Texture width (" + std::to_string(texture.getSize().x) +
+                                        ") is not divisible by tile width (" + std::to_string(tileSize.x) + ")";
+            std::cerr << err_msg << std::endl;
+            throw std::invalid_argument(err_msg);
         }
 
         if (texture.getSize().y % tileSize.y != 0) {
-            throw std::invalid_argument("Texture height (" + std::to_string(texture.getSize().y) +
-                                        ") is not divisible by tile height (" + std::to_string(tileSize.y) + ")");
+            const std::string err_msg = "Texture height (" + std::to_string(texture.getSize().y) +
+                                        ") is not divisible by tile height (" + std::to_string(tileSize.y) + ")";
+            std::cerr << err_msg << std::endl;
+            throw std::invalid_argument(err_msg);
         }
+
+        yOffset = (static_cast<int>(getTileSize().y/props::BASE_TILESIZE.y) - static_cast<int>(getTileSize().x/props::BASE_TILESIZE.x)) 
+            * static_cast<int>(props::BASE_TILESIZE.y); 
     }
 
     sf::IntRect Tileset::getTileRectByIndex(unsigned int tileIndex) const {
@@ -32,10 +39,14 @@ namespace assets {
 
     AssetsManager::AssetsManager() {
         loadTexture(textureCommon,        "res/tilesets/tileset_common.png");
+        loadTexture(textureObjects1x4,    "res/tilesets/tileset_objects_1x4.png");
+        loadTexture(textureObjects2x4,    "res/tilesets/tileset_objects_2x4.png");
         loadTexture(textureObjects2x2,    "res/tilesets/tileset_objects_2x2.png");
         loadTexture(textureObjects3x3,    "res/tilesets/tileset_objects_3x3.png");
 
         tilesetCommon = new Tileset(textureCommon, props::BASE_TILESIZE);
+        tilesetObjects1x4 = new Tileset(textureObjects1x4, {1 * props::BASE_TILESIZE.x, 4 * props::BASE_TILESIZE.y});
+        tilesetObjects2x4 = new Tileset(textureObjects2x4, {2 * props::BASE_TILESIZE.x, 4 * props::BASE_TILESIZE.y});
         tilesetObjects2x2 = new Tileset(textureObjects2x2, {2 * props::BASE_TILESIZE.x, 2 * props::BASE_TILESIZE.y});
         tilesetObjects3x3 = new Tileset(textureObjects3x3, {3 * props::BASE_TILESIZE.x, 3 * props::BASE_TILESIZE.y});
     }
@@ -44,6 +55,12 @@ namespace assets {
         switch (id) {
         case AssetId::COMMON:
             return textureCommon;
+
+        case AssetId::OBJECTS_1X4:
+            return textureObjects1x4;
+
+        case AssetId::OBJECTS_2X4:
+            return textureObjects2x4;
 
         case AssetId::OBJECTS_2X2:
             return textureObjects2x2;
@@ -60,6 +77,12 @@ namespace assets {
         switch (id) {
         case AssetId::COMMON:
             return tilesetCommon;
+
+        case AssetId::OBJECTS_1X4:
+            return tilesetObjects1x4;
+
+        case AssetId::OBJECTS_2X4:
+            return tilesetObjects2x4;
 
         case AssetId::OBJECTS_2X2:
             return tilesetObjects2x2;
