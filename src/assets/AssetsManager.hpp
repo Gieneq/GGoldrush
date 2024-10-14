@@ -10,6 +10,8 @@ namespace assets {
      */
     enum AssetId {
         COMMON,
+        ITEMS,
+        EXTRACTIONS,
         OBJECTS_1X4,
         OBJECTS_2X4,
         OBJECTS_2X2,
@@ -62,7 +64,7 @@ namespace assets {
 
         const sf::Texture& getTexture(AssetId id) const;
 
-        const assets::Tileset* const getTileset(AssetId id) const;
+        const assets::Tileset& getTileset(AssetId id) const;
 
         static AssetsManager& getInstane() {
             static AssetsManager instance;
@@ -74,6 +76,12 @@ namespace assets {
 
         sf::Texture textureCommon;
         Tileset* tilesetCommon;
+        
+        sf::Texture textureItems;
+        Tileset* tilesetItems;
+        
+        sf::Texture textureExtractions;
+        Tileset* tilesetExtractions;
         
         sf::Texture textureObjects1x4;
         Tileset* tilesetObjects1x4;

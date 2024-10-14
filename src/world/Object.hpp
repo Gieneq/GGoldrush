@@ -2,18 +2,15 @@
 
 #include <SFML/Graphics.hpp>
 
+#include "assets/AssetsManager.hpp"
 #include "Picker.hpp"
-
-namespace assets {
-    class Tileset;
-}
 
 namespace world {
 
     class Object : public SelectableObject {
     protected:
     friend class World;
-        Object(const sf::Vector2i& gridPosition, const assets::Tileset* const tileset, size_t tileIndex);
+        Object(const sf::Vector2i& gridPosition, const assets::Tileset& tileset, size_t tileIndex);
         virtual ~Object() = default;
         Object(const Object&) = delete;
         Object& operator=(const Object&) = delete;
@@ -31,7 +28,7 @@ namespace world {
 
     protected:
         sf::Sprite mainSprite; 
-        const assets::Tileset* const mainTileset;
+        const assets::Tileset& mainTileset;
         size_t mainTileIndex;
         sf::Vector2i gridPosition;
     };

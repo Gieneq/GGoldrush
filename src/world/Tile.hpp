@@ -14,7 +14,7 @@ namespace world {
 
     class Tile : public world::Object {
     friend class World;
-        Tile(const sf::Vector2i& gridPosition, const assets::Tileset* const tileset, size_t tileIndexTop, std::optional<size_t> tileIndexWalls = std::nullopt);
+        Tile(const sf::Vector2i& gridPosition, const assets::Tileset& tileset, size_t tileIndexTop, std::optional<size_t> tileIndexWalls = std::nullopt);
 
     public:
         virtual void tick() override {}

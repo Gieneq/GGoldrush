@@ -8,6 +8,7 @@
 #include <assets/AssetsManager.hpp>
 #include <common/Properties.hpp>
 #include <world/Picker.hpp>
+#include <game/Player.hpp>
 
 namespace world {
 
@@ -30,7 +31,7 @@ namespace world {
         
         void processEvents(const sf::Event& event, const sf::Vector2i& mousePosition);
 
-        Tile* createTile(const sf::Vector2i& gridPosition, const assets::Tileset* const tileset, const size_t tileIdx);
+        Tile* createTile(const sf::Vector2i& gridPosition, const assets::Tileset& tileset, const size_t tileIdx);
 
     private:
         void onSelectableObjectGoSelected(SelectableObject* selObj) override;
@@ -47,6 +48,8 @@ namespace world {
         std::vector<Tile*> groundTiles;
 
         Picker picker;
+
+        game::Player player;
     };
 
 }

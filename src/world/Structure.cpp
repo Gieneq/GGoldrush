@@ -9,14 +9,14 @@
 
 namespace world {
 
-    Structure::Structure(const sf::Vector2i& gridPosition, const assets::Tileset* const tileset, size_t tileIndex) 
+    Structure::Structure(const sf::Vector2i& gridPosition, const assets::Tileset& tileset, size_t tileIndex) 
         : world::Object(gridPosition, tileset, tileIndex) {
 
         const auto worldPosition = world::Camera::gridToWorldSpace(gridPosition);
         const auto cameraPosition = world::Camera::worldToCameraSpace(worldPosition);
 
         /* Top of tile */
-        if ((tileset->getTileSize().x % props::BASE_TILESIZE.x != 0) || (tileset->getTileSize().y % props::BASE_TILESIZE.y != 0)) {
+        if ((tileset.getTileSize().x % props::BASE_TILESIZE.x != 0) || (tileset.getTileSize().y % props::BASE_TILESIZE.y != 0)) {
             throw std::invalid_argument("Tileset tilesize not equal n * base size");
         }
     }

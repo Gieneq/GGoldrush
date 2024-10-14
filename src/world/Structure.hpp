@@ -4,15 +4,12 @@
 
 #include <world/Object.hpp>
 
-namespace assets {
-    class Tileset;
-}
-
 namespace world {
 
     class Structure : public world::Object {
+    protected:
     friend class World;
-        Structure(const sf::Vector2i& gridPosition, const assets::Tileset* const tileset, size_t tileIndex);
+        Structure(const sf::Vector2i& gridPosition, const assets::Tileset& tileset, size_t tileIndex);
 
     public:
         virtual void tick() override {}

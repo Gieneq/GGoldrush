@@ -16,12 +16,19 @@ FetchContent_MakeAvailable(SFML)
 add_executable(main 
     src/assets/AssetsManager.cpp
 
+    src/common/AnmatedSprite.cpp
+
     src/world/Object.cpp
     src/world/Tile.cpp
     src/world/Structure.cpp
+    src/world/structures/Resourcer.cpp
     src/world/World.cpp
     src/world/Camera.cpp
     src/world/Picker.cpp
+
+    src/game/Player.cpp
+    src/game/items/Item.cpp
+    src/game/items/Storage.cpp
     
     src/gui/box/Box.cpp
 

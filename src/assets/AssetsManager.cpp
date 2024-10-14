@@ -39,12 +39,16 @@ namespace assets {
 
     AssetsManager::AssetsManager() {
         loadTexture(textureCommon,        "res/tilesets/tileset_common.png");
+        loadTexture(textureItems,         "res/tilesets/tileset_items.png");
+        loadTexture(textureExtractions,   "res/tilesets/tileset_extractions.png");
         loadTexture(textureObjects1x4,    "res/tilesets/tileset_objects_1x4.png");
         loadTexture(textureObjects2x4,    "res/tilesets/tileset_objects_2x4.png");
         loadTexture(textureObjects2x2,    "res/tilesets/tileset_objects_2x2.png");
         loadTexture(textureObjects3x3,    "res/tilesets/tileset_objects_3x3.png");
 
         tilesetCommon = new Tileset(textureCommon, props::BASE_TILESIZE);
+        tilesetItems = new Tileset(textureItems, props::BASE_TILESIZE);
+        tilesetExtractions = new Tileset(textureExtractions, {64, 64});
         tilesetObjects1x4 = new Tileset(textureObjects1x4, {1 * props::BASE_TILESIZE.x, 4 * props::BASE_TILESIZE.y});
         tilesetObjects2x4 = new Tileset(textureObjects2x4, {2 * props::BASE_TILESIZE.x, 4 * props::BASE_TILESIZE.y});
         tilesetObjects2x2 = new Tileset(textureObjects2x2, {2 * props::BASE_TILESIZE.x, 2 * props::BASE_TILESIZE.y});
@@ -55,6 +59,12 @@ namespace assets {
         switch (id) {
         case AssetId::COMMON:
             return textureCommon;
+
+        case AssetId::ITEMS:
+            return textureItems;
+
+        case AssetId::EXTRACTIONS:
+            return textureExtractions;
 
         case AssetId::OBJECTS_1X4:
             return textureObjects1x4;
@@ -73,22 +83,28 @@ namespace assets {
         }
     }
 
-    const assets::Tileset* const AssetsManager::getTileset(AssetId id) const {
+    const assets::Tileset&AssetsManager::getTileset(AssetId id) const {
         switch (id) {
         case AssetId::COMMON:
-            return tilesetCommon;
+            return *tilesetCommon;
+
+        case AssetId::ITEMS:
+            return *tilesetItems;
+
+        case AssetId::EXTRACTIONS:
+            return *tilesetExtractions;
 
         case AssetId::OBJECTS_1X4:
-            return tilesetObjects1x4;
+            return *tilesetObjects1x4;
 
         case AssetId::OBJECTS_2X4:
-            return tilesetObjects2x4;
+            return *tilesetObjects2x4;
 
         case AssetId::OBJECTS_2X2:
-            return tilesetObjects2x2;
+            return *tilesetObjects2x2;
 
         case AssetId::OBJECTS_3X3:
-            return tilesetObjects3x3;
+            return *tilesetObjects3x3;
         
         default:
             throw std::invalid_argument("Invalid texture id");

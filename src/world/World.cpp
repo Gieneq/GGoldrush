@@ -5,6 +5,7 @@
 
 #include "Tile.hpp"
 #include "Structure.hpp"
+#include "structures/Resourcer.hpp"
 
 namespace world {
 
@@ -15,6 +16,10 @@ namespace world {
 
     void World::tick(float dt) {
         camera.tick(dt);
+        
+        for (const auto& structure: structures) {
+            structure->tick();
+        }
     }
 
     void World::draw(sf::RenderWindow& target) {
@@ -54,7 +59,7 @@ namespace world {
         picker.processEvents(event, mouseCameraPosition);
     }
 
-    Tile* World::createTile(const sf::Vector2i& gridPosition, const assets::Tileset* const tileset, const size_t tileIdx) {
+    Tile* World::createTile(const sf::Vector2i& gridPosition, const assets::Tileset& tileset, const size_t tileIdx) {
         const auto newTile = new Tile(gridPosition, tileset, tileIdx, 225);
 
         groundTiles.push_back(newTile);
@@ -103,7 +108,7 @@ namespace world {
     }
     
     void World::buildTest() {
-        const auto tileset = assets::AssetsManager::getInstane().getTileset(assets::AssetId::COMMON);
+        const auto& tileset = assets::AssetsManager::getInstane().getTileset(assets::AssetId::COMMON);
 
         int coloridx=0;
         for (int iy = 0; iy < size.y; iy++) {
@@ -120,16 +125,17 @@ namespace world {
         }
 
         //trees
-        const auto structureTileset = assets::AssetsManager::getInstane().getTileset(assets::AssetId::OBJECTS_1X4);
+        const auto& structureTileset = assets::AssetsManager::getInstane().getTileset(assets::AssetId::OBJECTS_1X4);
+        const auto& meanulExtrTIleset = assets::AssetsManager::getInstane().getTileset(assets::AssetId::EXTRACTIONS);
 
         const auto newStructure = new Structure({0,0}, structureTileset, 0);
         structures.push_back(newStructure);
         
-        const auto newStructure1 = new Structure({0,1}, structureTileset, 0);
+        const auto newStructure1 = new Resourcer({0,1}, structureTileset, 0, game::ItemType::RAW_WOOD, meanulExtrTIleset, std::make_pair<size_t, size_t>(0, 8));
         structures.push_back(newStructure1);
 
         //sawmill
-        const auto buildingsTileset = assets::AssetsManager::getInstane().getTileset(assets::AssetId::OBJECTS_2X4);
+        const auto& buildingsTileset = assets::AssetsManager::getInstane().getTileset(assets::AssetId::OBJECTS_2X4);
 
         const auto newBuilding = new Structure({3,0}, buildingsTileset, 0);
         structures.push_back(newBuilding);
