@@ -7,7 +7,7 @@
 
 namespace assets {
 
-    Tileset::Tileset(const sf::Texture& texture, const sf::Vector2u& tileSize) : texture(texture), tileSize(tileSize) {
+    Tileset::Tileset(const sf::Texture& texture, const sf::Vector2u& tileSize) : texture(texture), tileSize(tileSize), deriviedImage{texture.copyToImage()} {
         if (texture.getSize().x % tileSize.x != 0) {
             const std::string err_msg = "Texture width (" + std::to_string(texture.getSize().x) +
                                         ") is not divisible by tile width (" + std::to_string(tileSize.x) + ")";

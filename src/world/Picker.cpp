@@ -2,24 +2,30 @@
         
 #include <iostream>
 
+#include <gui/Debug.hpp>
+
 namespace world {
  
-    std::string SelectableObject::toString() const {
-        return "SelectableObject(selected=" + std::to_string(isSelected) + ")";
+    std::string ClickableObject::toString() const {
+        return "ClickableObject(clickable=" + std::to_string(clickable) + ")";
     }
 
-    SelectableObject* Picker::findSelectableObjectByMouseCameraPosition(const sf::Vector2f& mouseCameraPosition) {
-        for (auto sel : selectablesCache) {
-            if (sel->isMouseInsideShape(mouseCameraPosition)) {
-                return sel;
+    std::string ClickableObject::getBrief() const {
+        return "ClickableObject brief";
+    }
+
+    ClickableObject* Picker::findClickableObjectByMouseCameraPosition(const sf::Vector2f& mouseCameraPosition) {
+        for (auto cobj : batch) {
+            if (cobj->isMouseInsideShape(mouseCameraPosition)) {
+                return cobj;
             }
         }
         return nullptr;
     }
     
-    bool Picker::isSelectableObjectInsideBatch(SelectableObject* selectableObject) {
-        for (auto sel : selectablesCache) {
-            if (sel == selectableObject) {
+    bool Picker::isClickableObjectInsideBatch(ClickableObject* examinedCobj) {
+        for (auto cobj : batch) {
+            if (cobj == examinedCobj) {
                 return true;
             }
         }
@@ -28,45 +34,84 @@ namespace world {
 
     void Picker::processEvents(const sf::Event& event, const sf::Vector2f& mouseCameraPosition) {
 
-        /* Deselect if already selected disappeared from batch */
-        if (selectedRecently) {
-            if (!isSelectableObjectInsideBatch(selectedRecently)) {
-                selectedRecently = nullptr;
-                std::cout << "Warning, selectedRecently got invalid. Fixit" << std::endl;
+        gui::DebugOverlay::get().common.processEventBatchSize = batch.size();
+        sf::Clock timer;
+
+        /* Cleared if hoveredLastly somehow disappeared from batch */
+        if (hoveredLastly) {
+            if (!isClickableObjectInsideBatch(hoveredLastly)) {
+                hoveredLastly = nullptr;
+                std::cout << "Warning, hoveredLastly got invalid. Fixit" << std::endl;
             }
         }
-        
-        const bool clickOccured{event.type == sf::Event::EventType::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Button::Left};
-        // bool clickHitAny{false};
 
-        //deselect with escape
+        /* Hover - separately from click events */
+        auto hoveredRecently = findClickableObjectByMouseCameraPosition(mouseCameraPosition);
+        if (hoveredRecently != hoveredLastly) {
 
-        if (clickOccured) {
-            auto nextSelected = findSelectableObjectByMouseCameraPosition(mouseCameraPosition);
-            if (!nextSelected && selectedRecently) {
-                /* Deselect */
-                selectedRecently->isSelected = false;
-                selectedRecently->onNormal();
-                notifyAllOnNormal(selectedRecently);
-                selectedRecently = nullptr;
+            /* Any was hover lastly */
+            if (hoveredLastly) {
+                hoveredLastly->hovered = false;
+                hoveredLastly->onHoverLeave();
+                notifyAboutEvent(hoveredLastly, ClickableObjectListener::Event::HoverLeave);
             }
-            else if (selectedRecently != nextSelected) {
-                if (selectedRecently) {
-                    /* Deselect */
-                    selectedRecently->isSelected = false;
-                    selectedRecently->onNormal();
-                    notifyAllOnNormal(selectedRecently);
-                    selectedRecently = nullptr;
-                }
 
-                /* Select next */
-                nextSelected->isSelected = true;
-                nextSelected->onSelect();
-                selectedRecently = nextSelected;
-                notifyAllOnSelect(selectedRecently);
+            /* Hovered on something */
+            if (hoveredRecently) {
+                hoveredRecently->hovered = true;
+                hoveredRecently->onHoverEnter();
+                notifyAboutEvent(hoveredRecently, ClickableObjectListener::Event::HoverEnter);
+            }
+            hoveredLastly = hoveredRecently;
+
+        }
+
+        const bool clickOccuredLMB{event.type == sf::Event::EventType::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Button::Left};
+        const bool clickOccuredRMB{event.type == sf::Event::EventType::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Button::Right};
+
+        if (hoveredRecently) {
+            if (clickOccuredLMB) {
+                hoveredRecently->onReleasedLMB();
+                notifyAboutEvent(hoveredRecently, ClickableObjectListener::Event::ReleasedLMB);
+            }
+            
+            if (clickOccuredRMB) {
+                hoveredRecently->onReleasedRMB();
+                notifyAboutEvent(hoveredRecently, ClickableObjectListener::Event::ReleasedRMB);
             }
         }
+
+        executionTimePeakDetector.updateValue(timer.getElapsedTime().asSeconds());
+        gui::DebugOverlay::get().common.processEventProcessTimeSec = executionTimePeakDetector.getMaxValue();
+    }
+
+    void Picker::notifyAboutEvent(ClickableObject* selObj, ClickableObjectListener::Event event) {
+
+        for (auto listener : listeners) {
+            listener->onClickableObjectEvent(selObj, event);
+        }
+
+        switch (event) {
+        case ClickableObjectListener::Event::HoverEnter:
+            notifyAllOnHoverEnter(selObj);
+            break;
         
+        case ClickableObjectListener::Event::HoverLeave:
+            notifyAllOnHoverLeave(selObj);
+            break;
+            
+        case ClickableObjectListener::Event::ReleasedLMB:
+            notifyAllOnReleasedLMB(selObj);
+            break;
+            
+        case ClickableObjectListener::Event::ReleasedRMB:
+            notifyAllOnReleasedRMB(selObj);
+            break;
+
+        default:
+            throw std::invalid_argument("Bad ClickableObjectListener::Event value!");
+        }
+
     }
 
 }

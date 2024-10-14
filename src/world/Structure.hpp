@@ -8,7 +8,7 @@ namespace world {
 
     class Structure : public world::Object {
     protected:
-    friend class World;
+    friend class ObjectsBuilder;
         Structure(const sf::Vector2i& gridPosition, const assets::Tileset& tileset, size_t tileIndex);
 
     public:
@@ -16,16 +16,10 @@ namespace world {
 
         virtual void draw(sf::RenderWindow& target);
 
-        virtual void onHover() override;
-
-        virtual void onSelect() override;
-        
-        virtual void onNormal() override;
-
-        virtual bool isMouseInsideShape(const sf::Vector2f& mouseCameraPosition) override;
-
         virtual std::string toString() const override;
         
+        virtual std::string getBrief() const override;
+
     private:
     };
 

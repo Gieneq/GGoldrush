@@ -32,6 +32,10 @@ namespace assets {
             return texture;
         }
 
+        const sf::Image& getDeriviedImage() const {
+            return deriviedImage;
+        }
+
         const sf::Vector2u& getTileSize() const {
             return tileSize;
         }
@@ -44,6 +48,7 @@ namespace assets {
 
     private:
         const sf::Texture& texture;
+        const sf::Image deriviedImage;
         const sf::Vector2u tileSize;
         int yOffset;
 

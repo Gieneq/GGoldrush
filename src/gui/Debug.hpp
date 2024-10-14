@@ -16,6 +16,11 @@ namespace gui {
             sf::Vector2i mouseScreenSpacePosition;
             sf::Vector2f mouseCameraSpacePosition;
             sf::Vector2f mouseWorldSpacePosition;
+
+            size_t processEventBatchSize;
+            float processEventProcessTimeSec;
+            
+            float deltaTimeSec;
         };
 
     private:

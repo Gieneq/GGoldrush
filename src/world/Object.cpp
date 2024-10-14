@@ -9,7 +9,7 @@
 namespace world {
 
     Object::Object(const sf::Vector2i& gridPosition, const assets::Tileset& mainTileset, size_t mainTileIndex) 
-        : SelectableObject(), mainTileset{mainTileset}, mainTileIndex{mainTileIndex}, gridPosition{gridPosition} {
+        : ClickableObject(), mainTileset{mainTileset}, mainTileIndex{mainTileIndex}, gridPosition{gridPosition} {
         const auto worldPosition = world::Camera::gridToWorldSpace(gridPosition);
         const auto cameraPosition = world::Camera::worldToCameraSpace(worldPosition);
 
@@ -23,6 +23,38 @@ namespace world {
     void Object::draw(sf::RenderWindow& target) {
         target.draw(mainSprite);
     }  
+
+    void Object::onHoverEnter() {
+        mainSprite.setColor(sf::Color(255, 128, 128, 255));
+    }
+    
+    void Object::onHoverLeave() {
+        mainSprite.setColor(sf::Color(255, 255, 255, 255));
+    }
+
+    bool Object::isMouseInsideShape(const sf::Vector2f& mouseCameraPosition) {
+        const auto box = mainSprite.getGlobalBounds();
+
+        /* Fast */
+        if (!box.contains(mouseCameraPosition)) {
+            return false;
+        }
+        
+        const sf::IntRect& textureRect = mainSprite.getTextureRect();
+        const auto mousePositionInsideTextureRect = static_cast<sf::Vector2i>(box.getPosition() - mouseCameraPosition);
+        const auto pixelCoord = textureRect.getPosition() - mousePositionInsideTextureRect;
+        
+        // Get the pixel data (RGBA) from the texture
+        const sf::Image& image = mainTileset.getDeriviedImage();
+        sf::Color pixelColor = image.getPixel(pixelCoord.x, pixelCoord.y);
+
+        // std::cout << "Sample pixel: " << pixelCoord << " alpha=" << (int)(pixelColor.a) << std::endl; 
+        if (pixelColor.a < 127) {
+            return false;
+        }
+
+        return true;
+    }
     
     std::string Object::toString() const {
         std::stringstream ss;
@@ -30,4 +62,7 @@ namespace world {
         return ss.str();
     }
 
+    std::string Object::getBrief() const {
+        return "Object brief";
+    }
 }

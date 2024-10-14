@@ -5,7 +5,6 @@
 namespace gfx {
 
     AnimatedSprite::AnimatedSprite(
-        const sf::Vector2f& position, 
         const assets::Tileset& tileset, 
         std::pair<size_t, size_t> tilesetIndicesRange, 
         int durationTicks
@@ -17,7 +16,7 @@ namespace gfx {
 
         sprite.setTexture(tileset.getTexture());
         sprite.setOrigin({0,0});
-        sprite.setPosition(position);
+        sprite.setPosition({0,0});
         updateSpriteFrame();
     }
 

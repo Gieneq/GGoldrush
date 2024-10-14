@@ -5,29 +5,32 @@
 #include <exception>
 
 #include <SFML/Graphics.hpp>
-
+#include <common/Utils.hpp>
 
 namespace world {
 
-    class SelectableObject {
+    class ClickableObject {
     friend class Picker;
     public:
-        SelectableObject(bool selectableEnabled = true) : selectable{selectableEnabled} {}
-        virtual ~SelectableObject() = default;
+        ClickableObject(bool clickableEnabled = true) : clickable{clickableEnabled} {}
+        virtual ~ClickableObject() = default;
 
-        virtual void onHover() {}
-
-        virtual void onSelect() {}
+        virtual void onReleasedLMB() {}
         
-        virtual void onNormal() {}
+        virtual void onReleasedRMB() {}
+        
+        virtual void onHoverEnter() {}
+        
+        virtual void onHoverLeave() {}
 
-        bool selectable;
+        bool clickable;
 
         virtual std::string toString() const;
+        
+        virtual std::string getBrief() const;
 
     private:
-        bool isHovered{false};
-        bool isSelected{false};
+        bool hovered{false};
 
         virtual bool isMouseInsideShape(const sf::Vector2f& mouseCameraPosition) {
             return false;
@@ -35,33 +38,44 @@ namespace world {
         
     };
 
-    inline std::ostream& operator<<(std::ostream& os, const world::SelectableObject& so) {
+    inline std::ostream& operator<<(std::ostream& os, const world::ClickableObject& so) {
         return os << so.toString();
     }
 
-    class SelectableObjectListener {
+    class ClickableObjectListener {
     public:
-        virtual void onSelectableObjectGoSelected(SelectableObject* selObj) {}
-        virtual void onSelectableObjectGoNormal(SelectableObject* selObj) {}
+        enum Event {
+            ReleasedLMB,
+            ReleasedRMB,
+            HoverEnter,
+            HoverLeave,
+        };
+
+        virtual ~ClickableObjectListener() = default;
+        virtual void onClickableObjectGotReleasedLMB(ClickableObject* cobj) {}
+        virtual void onClickableObjectGotReleasedRMB(ClickableObject* cobj) {}
+        virtual void onClickableObjectHoverEnter(ClickableObject* cobj) {}
+        virtual void onClickableObjectHoverLeave(ClickableObject* cobj) {}
+        virtual void onClickableObjectEvent(ClickableObject* cobj, Event evt) {}
     };
     
     class Picker {
     public:
 
         Picker() {
-            selectablesCache.clear();
+            batch.clear();
         }
 
-        void prepareCheck() {
-            selectablesCache.clear();
+        void prepareBatch() {
+            batch.clear();
         }
 
-        void addSelectable(SelectableObject* sel) {
-            selectablesCache.push_back(sel);
+        void addClickableObjectToBatch(ClickableObject* cobj) {
+            batch.push_back(cobj);
         }
 
-        void addListener(SelectableObjectListener* newListener) {
-            if (std::any_of(listeners.begin(), listeners.end(), [newListener](const SelectableObjectListener* listener) {return newListener == listener;})) {
+        void addListener(ClickableObjectListener* newListener) {
+            if (std::any_of(listeners.begin(), listeners.end(), [newListener](const ClickableObjectListener* listener) {return newListener == listener;})) {
                 const std::string err_msg = "Picker listener already added!";
                 std::cerr << err_msg << std::endl;
                 throw std::invalid_argument(err_msg);
@@ -72,27 +86,43 @@ namespace world {
         void processEvents(const sf::Event& event, const sf::Vector2f& mouseCameraPosition);
 
     private:
-        SelectableObject* findSelectableObjectByMouseCameraPosition(const sf::Vector2f& mouseCameraPosition);
+        ClickableObject* findClickableObjectByMouseCameraPosition(const sf::Vector2f& mouseCameraPosition);
         
-        bool isSelectableObjectInsideBatch(SelectableObject* selectableObject);
+        bool isClickableObjectInsideBatch(ClickableObject* cobj);
 
-        std::vector<SelectableObject*> selectablesCache;
-        SelectableObject* selectedRecently{nullptr};
-        SelectableObject* hoveredRecently{nullptr};
-        
-        void notifyAllOnSelect(SelectableObject* selObj) {
+        std::vector<ClickableObject*> batch;
+
+        ClickableObject* hoveredLastly{nullptr};
+
+        void notifyAboutEvent(ClickableObject* selObj, ClickableObjectListener::Event event);
+
+        void notifyAllOnReleasedLMB(ClickableObject* selObj) {
             for (auto listener : listeners) {
-                listener->onSelectableObjectGoSelected(selObj);
+                listener->onClickableObjectGotReleasedLMB(selObj);
             }
         }
 
-        void notifyAllOnNormal(SelectableObject* selObj) {
+        void notifyAllOnReleasedRMB(ClickableObject* selObj) {
             for (auto listener : listeners) {
-                listener->onSelectableObjectGoNormal(selObj);
+                listener->onClickableObjectGotReleasedRMB(selObj);
             }
         }
 
-        std::vector<SelectableObjectListener*> listeners;
+        void notifyAllOnHoverEnter(ClickableObject* selObj) {
+            for (auto listener : listeners) {
+                listener->onClickableObjectHoverEnter(selObj);
+            }
+        }
+
+        void notifyAllOnHoverLeave(ClickableObject* selObj) {
+            for (auto listener : listeners) {
+                listener->onClickableObjectHoverLeave(selObj);
+            }
+        }
+
+        std::vector<ClickableObjectListener*> listeners;
+
+        utils::PeakDetector executionTimePeakDetector;
     };
 
 }

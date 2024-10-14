@@ -13,10 +13,14 @@ namespace gfx {
 
     class AnimatedSprite {
     public:
-        AnimatedSprite(const sf::Vector2f& position, const assets::Tileset& tileset, std::pair<size_t, size_t> tilesetIndicesRange, int durationTicks = 100);
+        AnimatedSprite(const assets::Tileset& tileset, std::pair<size_t, size_t> tilesetIndicesRange, int durationTicks = 100);
 
         void setVisible(bool visibility) {
             this->visible = visibility;
+        }
+
+        void setPosition(const sf::Vector2f& position) {
+            sprite.setPosition(position);
         }
 
         void start() {

@@ -16,7 +16,7 @@ int main() {
 
     std::cout << "Starting" << std::endl;
 
-    world::World world({5, 5});
+    world::World world({5, 15});
     world.getCamera().sameAs(window.getDefaultView());
     // world.getCamera().lookAt({1920u/4,0});
     world.getCamera().lookAt({0,0});
@@ -63,6 +63,7 @@ int main() {
         window.clear();
 
         const float deltaTimeSec = loopTimeMeasure.restart().asSeconds();
+        gui::DebugOverlay::get().common.deltaTimeSec = deltaTimeSec;
 
         /* World */
         window.setView(world.getCamera().getView());

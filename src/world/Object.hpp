@@ -7,9 +7,9 @@
 
 namespace world {
 
-    class Object : public SelectableObject {
+    class Object : public ClickableObject {
     protected:
-    friend class World;
+    friend class ObjectsBuilder;
         Object(const sf::Vector2i& gridPosition, const assets::Tileset& tileset, size_t tileIndex);
         virtual ~Object() = default;
         Object(const Object&) = delete;
@@ -24,7 +24,15 @@ namespace world {
             return gridPosition;
         }
 
+        virtual void onHoverEnter() override;
+
+        virtual void onHoverLeave() override;
+
+        virtual bool isMouseInsideShape(const sf::Vector2f& mouseCameraPosition) override;
+
         virtual std::string toString() const override;
+        
+        virtual std::string getBrief() const override;
 
     protected:
         sf::Sprite mainSprite; 

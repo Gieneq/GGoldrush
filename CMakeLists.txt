@@ -23,6 +23,7 @@ add_executable(main
     src/world/Structure.cpp
     src/world/structures/Resourcer.cpp
     src/world/World.cpp
+    src/world/ObjectsBuilder.cpp
     src/world/Camera.cpp
     src/world/Picker.cpp
 

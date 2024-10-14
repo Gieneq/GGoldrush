@@ -40,105 +40,72 @@ namespace world {
     void World::processEvents(const sf::Event& event, const sf::Vector2i& mousePosition) {
         camera.processEvents(event, mousePosition);
 
-        picker.prepareCheck();
+        picker.prepareBatch();
 
         /* Front to back */
         std::sort(structures.begin(), structures.end(), [](const Structure* s1, const Structure* s2){
             return s1->getGridPosition().y > s2->getGridPosition().y;
         });
         for (auto structure : structures) {
-            picker.addSelectable(structure);
+            picker.addClickableObjectToBatch(structure);
         }
 
         for (auto tile : groundTiles) {
-            picker.addSelectable(tile);
+            picker.addClickableObjectToBatch(tile);
         }
-        // picker.addSelectable(groundTiles[0]);
 
         const auto mouseCameraPosition = camera.transformScrenToCameraSpace(mousePosition);
         picker.processEvents(event, mouseCameraPosition);
     }
 
-    Tile* World::createTile(const sf::Vector2i& gridPosition, const assets::Tileset& tileset, const size_t tileIdx) {
-        const auto newTile = new Tile(gridPosition, tileset, tileIdx, 225);
+    // Tile* World::createTile(const sf::Vector2i& gridPosition, const assets::Tileset& tileset, const size_t tileIdx) {
+    //     const auto newTile = new Tile(gridPosition, tileset, tileIdx, 225);
 
-        groundTiles.push_back(newTile);
+    //     groundTiles.push_back(newTile);
 
-        return newTile;
-    }
-    
-    void World::onSelectableObjectGoSelected(SelectableObject* selObj) {
-        Structure* foundStructure = nullptr;
-        const auto structureIt = std::find(structures.begin(), structures.end(), selObj);
-        if (structureIt != structures.end()) {
-            foundStructure = *structureIt;
-            std::cout << "Selected Structure: " << *foundStructure << std::endl;
-            return;
-        }
+    //     return newTile;
+    // }
 
-        Tile* foundTile = nullptr;
-        const auto tileIt = std::find(groundTiles.begin(), groundTiles.end(), selObj);
-        if (tileIt != groundTiles.end()) {
-            foundTile = *tileIt;
-            std::cout << "Selected Tile: " << *foundTile << std::endl;
-            return;
-        }
+    void World::onClickableObjectEvent(ClickableObject* cobj, Event evt) {
+        switch (evt) {
+        case ClickableObjectListener::Event::ReleasedLMB :
+            std::cout << "World::onClickableObjectEvent=ReleasedLMB " << cobj->getBrief() << std::endl;
+            break;
+            
+        case ClickableObjectListener::Event::ReleasedRMB :
+            std::cout << "World::onClickableObjectEvent=ReleasedRMB " << cobj->getBrief() << std::endl;
+            break;
+            
+        case ClickableObjectListener::Event::HoverEnter :
+            std::cout << "World::onClickableObjectEvent=HoverEnter " << cobj->getBrief() << std::endl;
+            break;
+            
+        case ClickableObjectListener::Event::HoverLeave :
+            std::cout << "World::onClickableObjectEvent=HoverLeave " << cobj->getBrief() << std::endl;
+            break;
         
-        std::cout << "Selected SelectableObject: " << *selObj << std::endl;
-    }
-
-    void World::onSelectableObjectGoNormal(SelectableObject* selObj) {
-        Structure* foundStructure = nullptr;
-        const auto structureIt = std::find(structures.begin(), structures.end(), selObj);
-        if (structureIt != structures.end()) {
-            foundStructure = *structureIt;
-            std::cout << "Deselected Structure: " << *foundStructure << std::endl;
-            return;
+        default:
+            break;
         }
-
-        Tile* foundTile = nullptr;
-        const auto tileIt = std::find(groundTiles.begin(), groundTiles.end(), selObj);
-        if (tileIt != groundTiles.end()) {
-            foundTile = *tileIt;
-            std::cout << "Deselected Tile: " << *foundTile << std::endl;
-            return;
-        }
-        
-        std::cout << "Deelected SelectableObject: " << *selObj << std::endl;
     }
     
     void World::buildTest() {
         const auto& tileset = assets::AssetsManager::getInstane().getTileset(assets::AssetId::COMMON);
 
-        int coloridx=0;
         for (int iy = 0; iy < size.y; iy++) {
-            for (int ix = 0; ix< size.x; ix++) {
-                
-                const auto newTile = createTile(
-                    {ix, iy},
-                    tileset,
-                    static_cast<size_t>(coloridx % 4)
-                );
-                ++coloridx;
+            for (int ix = 0; ix < size.x; ix++) {
+
+                const auto newTile = iy < 4 ? objectsBuilder.createTileGrass({ix, iy}) : objectsBuilder.createTileDirt({ix, iy});
+                groundTiles.push_back(newTile);
 
             }
         }
 
-        //trees
-        const auto& structureTileset = assets::AssetsManager::getInstane().getTileset(assets::AssetId::OBJECTS_1X4);
-        const auto& meanulExtrTIleset = assets::AssetsManager::getInstane().getTileset(assets::AssetId::EXTRACTIONS);
-
-        const auto newStructure = new Structure({0,0}, structureTileset, 0);
-        structures.push_back(newStructure);
+        const auto forest1 = objectsBuilder.createResourcerForst({0, 1});
+        structures.push_back(forest1);
         
-        const auto newStructure1 = new Resourcer({0,1}, structureTileset, 0, game::ItemType::RAW_WOOD, meanulExtrTIleset, std::make_pair<size_t, size_t>(0, 8));
-        structures.push_back(newStructure1);
-
-        //sawmill
-        const auto& buildingsTileset = assets::AssetsManager::getInstane().getTileset(assets::AssetId::OBJECTS_2X4);
-
-        const auto newBuilding = new Structure({3,0}, buildingsTileset, 0);
-        structures.push_back(newBuilding);
+        const auto sawmill1 = objectsBuilder.createExtractorSawmill({3, 0});
+        // structures.push_back(sawmill1);
     }
 
 }
