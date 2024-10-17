@@ -6,40 +6,74 @@
 namespace game {
 
     Item Item::operator+(const Item& other) const {
-        if (meta.id != other.meta.id) {  // Compare by unique id
-            throw std::invalid_argument("Cannot add items of different types.");
-        }
+        checkMetaEqual(other);
         return Item(meta, quantity + other.quantity);
     }
 
     Item Item::operator-(const Item& other) const {
-        if (meta.id != other.meta.id) {  // Compare by unique id
-            throw std::invalid_argument("Cannot subtract items of different types.");
-        }
+        checkMetaEqual(other);
         if (quantity < other.quantity) {
-            throw std::invalid_argument("Insufficient quantity to subtract.");
+            throw ItemsQuantityException();
         }
         return Item(meta, quantity - other.quantity);
     }
 
     Item& Item::operator+=(const Item& other) {
-        if (meta.id != other.meta.id) {  // Compare by unique id
-            throw std::invalid_argument("Cannot add items of different types.");
-        }
-        quantity += other.quantity;
-        return *this;
+        return operator+=(other.quantity);
     }
 
     Item& Item::operator-=(const Item& other) {
-        if (meta.id != other.meta.id) {  // Compare by unique id
-            throw std::invalid_argument("Cannot subtract items of different types.");
+        return operator-=(other.quantity);
+    }
+
+    Item& Item::operator+=(int qty) {
+        if (this->quantity + qty < 0) {
+            throw ItemsQuantityException();
         }
-        if (quantity < other.quantity) {
-            throw std::invalid_argument("Insufficient quantity to subtract.");
-        }
-        quantity -= other.quantity;
+        
+        this->quantity += qty;
         return *this;
     }
+        
+    Item& Item::operator-=(int qty) {
+        if (this->quantity - qty < 0) {
+            throw ItemsQuantityException();
+        }
+        
+        this->quantity -= qty;
+        return *this;
+    }
+
+    bool Item::operator>(const Item& other) const {
+        checkMetaEqual(other);
+        return this->quantity > other.quantity;
+    }
+    
+    bool Item::operator>=(const Item& other) const {
+        checkMetaEqual(other);
+        return this->quantity >= other.quantity;
+    }
+
+    bool Item::operator<(const Item& other) const {
+        checkMetaEqual(other);
+        return this->quantity < other.quantity;
+    }
+    
+    bool Item::operator<=(const Item& other) const {
+        checkMetaEqual(other);
+        return this->quantity <= other.quantity;
+    }
+
+    bool Item::operator==(const Item& other) const {
+        checkMetaEqual(other);
+        return this->quantity == other.quantity;
+    }
+    
+    bool Item::operator!=(const Item& other) const {
+        checkMetaEqual(other);
+        return this->quantity != other.quantity;
+    }
+
 
     ItemsManager::ItemsManager() {
         addItemMeta(ItemType::RAW_WOOD, ItemFamily::FOREST, "Raw Wood", "A piece of unprocessed wood.", 1);
@@ -49,16 +83,16 @@ namespace game {
     }
 
     void ItemsManager::addItemMeta(ItemType type, ItemFamily family, const std::string& name, const std::string& description, size_t tilesetIndex) {
-        itemMetas.insert({type, {nextItemMetaId++, family, name, description, 
+        itemMetas.insert({type, {type, family, name, description, 
             assets::AssetsManager::getInstane().getTileset(assets::AssetId::ITEMS), tilesetIndex}});
     }
 
-    int ItemsManager::nextItemMetaId{1};
+    // int ItemsManager::nextItemMetaId{1};
     
     Item ItemsManager::createItem(ItemType type, int quantity) {
         auto it = itemMetas.find(type);
         if (it == itemMetas.end()) {
-            throw std::invalid_argument("Invalid ItemType provided to createItem.");
+            throw std::invalid_argument("Invalid ItemType provided to createItem.");//TODO better exception
         }
 
         return Item(it->second, quantity);

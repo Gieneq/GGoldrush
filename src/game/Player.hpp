@@ -9,7 +9,7 @@ namespace game {
         Player() {}
         
     private:
-        SlotsLimitedStorage storage;
+        Storage storage;
     };
 
 }
