@@ -2,27 +2,41 @@
 #include "game/items/Item.hpp"
 #include <gtest/gtest.h>
 
-TEST(StorageTest, AddItemIncreasesItemCount) {
-    // game::ItemMeta meta = {1, game::ItemFamily::FOREST, "Wood", "A piece of wood", /* some tileset */, 0};
-    // game::Item item(meta, 10);  // Create an item with quantity 10
-    // game::Storage storage;      // Create a storage instance
+using namespace game;
 
-    // // Add item to storage
-    // storage.add(item);
+TEST(StorageTest, AddItem) {
+    Storage storage; 
 
-    // // Check if the item was added correctly
-    // ASSERT_EQ(storage.begin()->getQuantity(), 10);
+    storage.add(ItemsManager::get().createItem(ItemType::RAW_WOOD, 10));
 
-    ASSERT_EQ(1,1);
+    ASSERT_EQ(storage[ItemType::RAW_WOOD].getMeta()->type, ItemType::RAW_WOOD);
+    ASSERT_EQ(storage[ItemType::RAW_WOOD].getQuantity(), 10);
+    ASSERT_EQ(storage.getOccupiedSlotsCount(), 1);
+    ASSERT_EQ(storage.getOverallItemsCount(), 10);
 }
 
 TEST(StorageTest, ExceedingCapacityThrowsException) {
-    // game::ItemMeta meta = {1, game::ItemFamily::FOREST, "Wood", "A piece of wood", /* some tileset */, 0};
-    // game::Item item(meta, 10);
-    // game::Storage storage(std::nullopt, 10);  // Limit item count to 10
+    Storage storage(std::nullopt, 10);  // Limit item count to 10
 
-    // // Add an item to storage and check exception when exceeding capacity
-    // storage.add(item);
-    // EXPECT_THROW(storage.add(item), game::Storage::NoCapacityException);
-    ASSERT_EQ(2,2);
+    Item item1 = ItemsManager::get().createItem(ItemType::RAW_WOOD, 8);
+    Item item2 = ItemsManager::get().createItem(ItemType::RAW_WOOD, 2);
+    Item item3 = ItemsManager::get().createItem(ItemType::RAW_WOOD, 1);
+
+    storage.add(std::move(item1));
+    storage.add(std::move(item2));
+    ASSERT_TRUE(item1.isCorrupted());
+    ASSERT_TRUE(item1.isCorrupted());
+    EXPECT_THROW(storage.add(std::move(item3)), game::Storage::NoCapacityException);
+}
+
+TEST(StorageTest, MoveItemBetweenStorages) {
+    Storage storageFrom;  
+    Storage storageTo;
+
+    // Setup storage
+    storageFrom.add(ItemsManager::get().createItem(ItemType::RAW_WOOD, 8));
+    storageFrom.moveItemTo(ItemType::RAW_WOOD, storageTo, 6);
+    
+    ASSERT_EQ(storageFrom[ItemType::RAW_WOOD].getQuantity(), 2);
+    ASSERT_EQ(storageTo[ItemType::RAW_WOOD].getQuantity(), 6);
 }

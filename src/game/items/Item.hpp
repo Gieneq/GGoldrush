@@ -3,6 +3,7 @@
 #include <iostream>
 #include <unordered_map>
 #include <exception>
+#include <optional>
 
 #include <SFML/Graphics.hpp>
 
@@ -29,7 +30,7 @@ namespace game {
         ItemFamily family;
         std::string name;
         std::string description;
-        const assets::Tileset& iconsTileset; //FIXME
+        const assets::Tileset& iconsTileset;
         size_t iconsTileIndex;
 
         bool operator==(const ItemMeta& im) const  {
@@ -41,45 +42,67 @@ namespace game {
         }
     };
     
+
+    /**
+     * Item
+     */
     class Item {
     public:
         
-        class ItemsNotMatchException : std::runtime_error {
+        class MetaNotMatchException : std::runtime_error {
         public:
-            ItemsNotMatchException() : std::runtime_error("Items meta not the same!") {}
+            MetaNotMatchException() : std::runtime_error("Items meta not the same!") {}
         };
 
-        class ItemsQuantityException : std::runtime_error {
+        class CorruptionException : std::runtime_error {
         public:
-            ItemsQuantityException() : std::runtime_error("Items quantity bad!") {}
+            CorruptionException() : std::runtime_error("Items corrupted!") {}
+        };
+
+        class QuantityException : std::runtime_error {
+        public:
+            QuantityException() : std::runtime_error("Items quantity bad!") {}
         };
 
     private:
         friend class ItemsManager;
-        Item(const ItemMeta& meta, int quantity = 1) : meta{meta}, quantity{quantity} {}
-
-        void checkMetaEqual(const Item& other) const {
-            if (this->meta != meta) {
-                throw ItemsNotMatchException();
-            }
-        }
-        
-        void checkMetaEqual(const Item& other) {
-            if (this->meta != meta) {
-                throw ItemsNotMatchException();
-            }
-        }
+        Item(const ItemMeta& meta, int quantity = 1) : meta{&meta}, quantity{quantity} {}
 
     public:
-        Item operator+(const Item& other) const;
+        // Move constructor
+        Item(Item&& other) noexcept
+            : meta{other.meta}, quantity{other.quantity} {
+            /* Make other corrupted */
+            other.meta = nullptr;
+            other.quantity = 0;
+        }
 
-        Item operator-(const Item& other) const;
+        // Move assignment operator
+        Item& operator=(Item&& other) noexcept {
+            if (this != &other) {
+                meta = other.meta;
+                quantity = other.quantity;
 
-        Item& operator+=(const Item& other);
+                other.meta = nullptr;
+                other.quantity = 0;
+            }
+            return *this;
+        }
 
-        Item& operator-=(const Item& other);
+        // Deleted copy constructor and copy assignment to prevent copying
+        Item(const Item&) = delete;
+        Item& operator=(const Item&) = delete;
+
+    public:
+        Item operator+(Item&& other);
+
+        Item operator-(Item&& other);
+
+        Item& operator+=(Item&& other);
 
         Item& operator+=(int qty);
+
+        Item& operator-=(Item&& other);
         
         Item& operator-=(int qty);
 
@@ -95,10 +118,11 @@ namespace game {
         
         bool operator!=(const Item& other) const;
 
+        Item extract(int quantityToExtract);
 
         void setQuantity(int newQuantity) {
             if (newQuantity < 0) {
-                throw ItemsQuantityException();
+                throw QuantityException();
             }
             quantity = newQuantity;
         }
@@ -107,12 +131,24 @@ namespace game {
             return quantity;
         }
 
-        const ItemMeta& meta;
+        const ItemMeta* getMeta() const {
+            return meta;
+        }
+
+        const bool isCorrupted() const {
+            return !meta;
+        }
 
     private:
         int quantity;
+
+        const ItemMeta* meta;
     };
 
+
+    /**
+     * ItemsManager
+     */
     class ItemsManager {
         ItemsManager();
 

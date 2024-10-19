@@ -1,7 +1,7 @@
 #pragma once
 
 #include <optional>
-#include <vector>
+#include <unordered_map>
 #include <stdexcept>
 #include <algorithm>
 
@@ -29,49 +29,16 @@ namespace game {
             ItemNotFoundException() : std::runtime_error("No item todo in storage") {}
         };
 
-
         Storage(std::optional<size_t> slotsMaxCount = std::nullopt, std::optional<size_t> itemsMaxCount = std::nullopt) 
             : slotsMaxCount{slotsMaxCount}, itemsMaxCount{itemsMaxCount} {}
         virtual ~Storage() = default;
 
-        void add(const Item& other) {
-            if (itemsMaxCount.has_value()) {
-                if (recentItemsCount + other.getQuantity() > itemsMaxCount.value()) {
-                    throw NoCapacityException();
-                }
-            }
+        void add(Item&& other);
 
-            auto it = std::find_if(items.begin(), items.end(), [&other](const Item& item){
-                return item.meta == other.meta;
-            });
-
-            if (it != items.end()) {
-                *it += other;
-            } else {
-                if (slotsMaxCount.has_value()) {
-                    if (items.size() > slotsMaxCount.value()) {
-                        throw NoSlotsException();
-                    }
-
-                    items.push_back(other);
-                }
-            }
-        }
-
-        void retrive(const Item& other) {
-            auto it = std::find_if(items.begin(), items.end(), [&other](const Item& item){
-                return other.meta == item.meta;
-            });
-
-            if (it == items.end()) {
-                throw ItemNotFoundException();
-            }
-
-            if (*it < other) {
-                
-            }
-        }
+        Item extract(ItemType type, std::optional<int> quantityOption = std::nullopt);
         
+        void moveItemTo(ItemType type, Storage& destinationStorage, std::optional<int> quantityOption = std::nullopt);
+
         // Add iterator support (range-based for loop)
         auto begin() { return items.begin(); }
         auto end() { return items.end(); }
@@ -80,20 +47,24 @@ namespace game {
         auto begin() const { return items.cbegin(); }
         auto end() const { return items.cend(); }
 
-        Item& operator[](ItemType type) {
-            auto it = std::find_if(items.begin(), items.end(), [type](Item& item){
-                return item.meta.type == type;
-            });
+        size_t getOverallItemsCount() const {
+            return recentItemsCount;
+        }
 
+        size_t getOccupiedSlotsCount() const {
+            return items.size();
+        }
+
+        Item& operator[](ItemType type) {
+            auto it = items.find(type);
             if (it == items.end()) {
                 throw ItemNotFoundException();
             }
-
-            return *it;
+            return it->second;
         }
 
     protected:
-        std::vector<Item> items;
+        std::unordered_map<ItemType, Item> items;
         std::optional<size_t> slotsMaxCount;
         std::optional<size_t> itemsMaxCount;
         size_t recentItemsCount{0};

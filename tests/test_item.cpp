@@ -4,50 +4,102 @@
 using namespace game;
 
 TEST(ItemTest, TestItemCreation) {
-    // Arrange
-    ItemsManager& manager = ItemsManager::get();
+    Item item1 = ItemsManager::get().createItem(ItemType::RAW_WOOD, 10);
 
-    // Act
-    Item item1 = manager.createItem(ItemType::RAW_WOOD, 10);
-
-    // Assert
     ASSERT_EQ(item1.getQuantity(), 10);
-    ASSERT_EQ(item1.meta.name, "Raw Wood");
+    ASSERT_EQ(item1.getMeta()->type, ItemType::RAW_WOOD);
 }
 
 TEST(ItemTest, TestItemAddition) {
-    // Arrange
-    ItemsManager& manager = ItemsManager::get();
+    Item item1 = ItemsManager::get().createItem(ItemType::RAW_WOOD, 10);
+    Item item2 = ItemsManager::get().createItem(ItemType::RAW_WOOD, 5);
 
-    Item item1 = manager.createItem(RAW_WOOD, 10);  // 10 units of wood
-    Item item2 = manager.createItem(RAW_WOOD, 5);   // 5 units of wood
+    Item item3 = item1 + std::move(item2);
 
-    // Act
-    item1 += item2;
+    ASSERT_EQ(item3.getQuantity(), 15);  // 10 + 5 should be 15
 
-    // Assert
+    ASSERT_TRUE(item1.isCorrupted()); // should be left corrupted
+    ASSERT_EQ(item1.getQuantity(), 0); 
+    
+    ASSERT_TRUE(item2.isCorrupted()); // should be left corrupted
+    ASSERT_EQ(item2.getQuantity(), 0); 
+}
+
+TEST(ItemTest, TestItemSubtraction) {
+    Item item1 = ItemsManager::get().createItem(ItemType::RAW_WOOD, 10);
+    Item item2 = ItemsManager::get().createItem(ItemType::RAW_WOOD, 5);
+
+    Item item3 = item1 - std::move(item2);
+
+    ASSERT_EQ(item3.getQuantity(), 5);  // 10 - 5 should be 5
+
+    ASSERT_TRUE(item1.isCorrupted()); // should be left corrupted
+    ASSERT_EQ(item1.getQuantity(), 0);
+
+    ASSERT_TRUE(item2.isCorrupted()); // should be left corrupted
+    ASSERT_EQ(item2.getQuantity(), 0);
+}
+
+TEST(ItemTest, TestItemAdditionWithMove) {
+    Item item1 = ItemsManager::get().createItem(ItemType::RAW_WOOD, 10);
+    Item item2 = ItemsManager::get().createItem(ItemType::RAW_WOOD, 5);
+
+    // Use operator+= to add item2 to item1, item2 should be corrupted after
+    item1 += std::move(item2);
+
+    // Check the resulting quantity of item1
+    ASSERT_EQ(item1.getQuantity(), 15);  // 10 + 5 should be 15
+
+    // Check that item2 is corrupted after the operation
+    ASSERT_TRUE(item2.isCorrupted());
+    ASSERT_EQ(item2.getQuantity(), 0);
+}
+
+TEST(ItemTest, TestItemAdditionWithQuantity) {
+    Item item1 = ItemsManager::get().createItem(ItemType::RAW_WOOD, 10);
+
+    // Use operator+= to add a quantity to item1
+    item1 += 5;
+
+    // Check the resulting quantity of item1
     ASSERT_EQ(item1.getQuantity(), 15);  // 10 + 5 should be 15
 }
 
+TEST(ItemTest, TestItemSubtractionWithMove) {
+    Item item1 = ItemsManager::get().createItem(ItemType::RAW_WOOD, 10);
+    Item item2 = ItemsManager::get().createItem(ItemType::RAW_WOOD, 5);
+
+    // Use operator-= to subtract item2 from item1, item2 should be corrupted after
+    item1 -= std::move(item2);
+
+    // Check the resulting quantity of item1
+    ASSERT_EQ(item1.getQuantity(), 5);  // 10 - 5 should be 5
+
+    // Check that item2 is corrupted after the operation
+    ASSERT_TRUE(item2.isCorrupted());
+    ASSERT_EQ(item2.getQuantity(), 0);
+}
+
+TEST(ItemTest, TestItemSubtractionWithQuantity) {
+    Item item1 = ItemsManager::get().createItem(ItemType::RAW_WOOD, 10);
+
+    // Use operator-= to subtract a quantity from item1
+    item1 -= 5;
+
+    // Check the resulting quantity of item1
+    ASSERT_EQ(item1.getQuantity(), 5);  // 10 - 5 should be 5
+}
+
 TEST(ItemTest, TestItemComparison) {
-    // Arrange
-    ItemsManager& manager = ItemsManager::get();
+    Item item1 = ItemsManager::get().createItem(ItemType::RAW_WOOD, 10);
+    Item item2 = ItemsManager::get().createItem(ItemType::RAW_WOOD, 5);
 
-    Item item1 = manager.createItem(RAW_WOOD, 10);
-    Item item2 = manager.createItem(RAW_WOOD, 5);
-
-    // Assert
     ASSERT_TRUE(item1 > item2);  // 10 > 5
     ASSERT_FALSE(item1 == item2);  // 10 != 5
 }
 
 TEST(ItemTest, TestItemExceptionOnNegativeQuantity) {
-    // Arrange
-    ItemsManager& manager = ItemsManager::get();
-    // manager.addItemMeta(RAW_WOOD, FOREST, "Raw Wood", "A piece of raw wood", 0);
+    Item item = ItemsManager::get().createItem(ItemType::RAW_WOOD, 10);
 
-    Item item = manager.createItem(RAW_WOOD, 10);
-
-    // Act & Assert
-    EXPECT_THROW(item.setQuantity(-5), Item::ItemsQuantityException);  // Should throw on negative quantity
+    EXPECT_THROW(item.setQuantity(-5), Item::QuantityException);  // Should throw on negative quantity
 }
