@@ -5,10 +5,13 @@
 namespace game {
 
     void Storage::add(Item&& other) {
+        if (other.getQuantity() == 0) {
+            return;
+        }
         if (other.isCorrupted()) {
             throw Item::CorruptionException();
         }
-        if (itemsMaxCount.has_value() && recentItemsCount + other.getQuantity() > itemsMaxCount.value()) {
+        if (!itemsMaxCount.isAll() && recentItemsCount + other.getQuantity() > itemsMaxCount.getQuantity()) {
             throw NoCapacityException();
         }
 
@@ -18,7 +21,7 @@ namespace game {
             recentItemsCount += other.getQuantity();
             item += std::move(other);
         } else {
-            if (slotsMaxCount.has_value() && getOccupiedSlotsCount() >= slotsMaxCount.value()) {
+            if (!slotsMaxCount.isAll() && getOccupiedSlotsCount() >= slotsMaxCount.getQuantity()) {
                 throw NoSlotsException();
             }
 
@@ -27,7 +30,7 @@ namespace game {
         }
     }
 
-    Item Storage::extract(ItemType type, std::optional<int> quantityOption) {
+    Item Storage::extract(ItemType type, Quantity quantity) {
         auto it = items.find(type);
 
         if (it == items.end()) {
@@ -40,7 +43,7 @@ namespace game {
             throw Item::QuantityException();
         }
 
-        const int quantityToExtract = quantityOption.has_value() ? quantityOption.value() : item.getQuantity();
+        const int quantityToExtract = !quantity.isAll() ? quantity.getQuantity() : item.getQuantity();
 
         if (quantityToExtract > item.getQuantity()) {
             // If requested quantity is more than available, throw an exception
@@ -63,11 +66,11 @@ namespace game {
         return extractedItem;  // Return the extracted item
     }
 
-    void Storage::moveItemTo(ItemType type, Storage& destinationStorage, std::optional<int> quantityOption) {
+    void Storage::moveItemTo(ItemType type, Storage& destinationStorage, Quantity quantity) {
         // Extract the item from the current storage
         try {
             // Try to extract the specified item with the optional quantity from the source storage
-            Item extractedItem = extract(type, quantityOption);
+            Item extractedItem = extract(type, quantity);
 
             // Try to add the extracted item to the destination storage
             try {

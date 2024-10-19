@@ -12,6 +12,37 @@ namespace game {
     class Storage {
     public:
 
+        class Quantity {
+        public:
+            class QuantityAllValueException : public std::logic_error {
+            public:
+                QuantityAllValueException() : std::logic_error("Attempted to get quantity when 'ALL' was specified.") {}
+            };
+
+            Quantity() : quantityOption{std::nullopt} {}
+            Quantity(int quantity) : quantityOption{quantity} {} // explicit would not allow using just int as constructor
+
+            static Quantity ALL() {
+                return Quantity();
+            }
+
+            bool isAll() const {
+                return !quantityOption.has_value();
+            }
+
+            // Get the specific quantity (only valid if not "ALL")
+            int getQuantity() const {
+                if (!quantityOption.has_value()) {
+                    throw QuantityAllValueException();
+                }
+                return quantityOption.value();
+            }
+
+        private:
+            std::optional<int> quantityOption;
+        };
+
+
         class NoCapacityException : public std::runtime_error {
         public:
             NoCapacityException() : std::runtime_error("Storage has no more capacity") {}
@@ -29,15 +60,15 @@ namespace game {
             ItemNotFoundException() : std::runtime_error("No item todo in storage") {}
         };
 
-        Storage(std::optional<size_t> slotsMaxCount = std::nullopt, std::optional<size_t> itemsMaxCount = std::nullopt) 
+        Storage(Quantity slotsMaxCount = Quantity::ALL(), Quantity itemsMaxCount = Quantity::ALL()) 
             : slotsMaxCount{slotsMaxCount}, itemsMaxCount{itemsMaxCount} {}
         virtual ~Storage() = default;
 
         void add(Item&& other);
 
-        Item extract(ItemType type, std::optional<int> quantityOption = std::nullopt);
+        Item extract(ItemType type, Quantity quantity = Quantity::ALL());
         
-        void moveItemTo(ItemType type, Storage& destinationStorage, std::optional<int> quantityOption = std::nullopt);
+        void moveItemTo(ItemType type, Storage& destinationStorage, Quantity quantity = Quantity::ALL());
 
         // Add iterator support (range-based for loop)
         auto begin() { return items.begin(); }
@@ -47,7 +78,7 @@ namespace game {
         auto begin() const { return items.cbegin(); }
         auto end() const { return items.cend(); }
 
-        size_t getOverallItemsCount() const {
+        int getOverallItemsCount() const {
             return recentItemsCount;
         }
 
@@ -65,9 +96,9 @@ namespace game {
 
     protected:
         std::unordered_map<ItemType, Item> items;
-        std::optional<size_t> slotsMaxCount;
-        std::optional<size_t> itemsMaxCount;
-        size_t recentItemsCount{0};
+        Quantity slotsMaxCount;
+        Quantity itemsMaxCount;
+        int recentItemsCount{0};
     };
 
 
