@@ -16,29 +16,9 @@ namespace gui {
 
         void draw(sf::RenderWindow& target) override;
 
-        virtual void setParent(Drawable* parent) override {
-            PlainButton::setParent(parent);
+        virtual void invalidate() override {
             centerLabelTextInButton();
-        }
-
-        virtual void setX(float x) override {
-            PlainButton::setX(x);
-            centerLabelTextInButton();
-        }
-        
-        virtual void setY(float y) override {
-            PlainButton::setY(y);
-            centerLabelTextInButton();
-        }
-
-        virtual void setWidth(float width) override {
-            PlainButton::setWidth(width);
-            centerLabelTextInButton();
-        }
-        
-        virtual void setHeight(float height) override {
-            PlainButton::setHeight(height);
-            centerLabelTextInButton();
+            PlainButton::invalidate();
         }
     
     protected:

@@ -24,7 +24,9 @@ namespace world {
 
     public:
         void sameAs(const sf::View& otherView) {
+            auto lastCenter = view.getCenter();
             view = otherView;
+            view.setCenter(lastCenter);
         }
 
         const sf::View& getView() const {

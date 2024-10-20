@@ -14,61 +14,67 @@ namespace gui {
     
         virtual void setParent(Drawable* parent) override {
             Drawable::setParent(parent);
-            shape.setPosition(getGloblX(), getGlobalY());
+            invalidate();
         }
 
-        virtual void setVisible(bool visible) {
+        virtual void setVisible(bool visible) override {
             this->visible = visible;
+            Drawable::setVisible(visible);
         }
 
-        virtual bool isVisible() const {
+        virtual bool isVisible() const override {
             return visible;
         }
 
         
-        virtual void setTouchable(bool touchable) {}
+        virtual void setTouchable(bool touchable) override {}
         
-        virtual bool isTouchable() const {
+        virtual bool isTouchable() const override {
             return false;
         }
 
-
-        virtual void setX(float x) {
-            localPosition.x = x;
+        virtual void invalidate() override {
             shape.setPosition(getGloblX(), getGlobalY());
+        }
+
+        virtual void setX(float x) override {
+            localPosition.x = x;
+            Drawable::setX(x);
         }
     
-        virtual void setY(float y) {
+        virtual void setY(float y) override {
             localPosition.y = y;
-            shape.setPosition(getGloblX(), getGlobalY());
+            Drawable::setY(y);
         }
 
-        virtual void setWidth(float width) {
-            auto tmpWidth = shape.getSize();
-            tmpWidth.x = width;
-            shape.setSize(tmpWidth);
+        virtual void setWidth(float width) override {
+            auto tmpSize = shape.getSize();
+            tmpSize.x = width;
+            shape.setSize(tmpSize);
+            Drawable::setWidth(width);
         }
         
-        virtual void setHeight(float height) {
-            auto tmpWidth = shape.getSize();
-            tmpWidth.y = height;
-            shape.setSize(tmpWidth);
+        virtual void setHeight(float height) override {
+            auto tmpSize = shape.getSize();
+            tmpSize.y = height;
+            shape.setSize(tmpSize);
+            Drawable::setHeight(height);
         }
         
 
-        virtual float getX() const {
+        virtual float getX() const override {
             return localPosition.x;
         }
         
-        virtual float getY() const {
+        virtual float getY() const override {
             return localPosition.y;
         }
 
-        virtual float getWidth() const {
+        virtual float getWidth() const override {
             return shape.getSize().x;
         }
         
-        virtual float getHeight() const {
+        virtual float getHeight() const override {
             return shape.getSize().y;
         }
 

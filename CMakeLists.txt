@@ -53,8 +53,8 @@ add_library(game_library STATIC
     src/gui/button/PlainTextButton.cpp
     src/gui/container/Container.cpp
     src/gui/font/FontManger.cpp
-    src/gui/view/ViewBase.cpp
-    src/gui/view/View.cpp
+    src/gui/GUIBase.cpp
+    src/gui/guis/GameGUI.cpp
     src/gui/Debug.cpp
 )
 

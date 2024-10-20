@@ -13,48 +13,48 @@ namespace gui {
         }
 
         virtual void draw(sf::RenderWindow& target) override;
-    
-        virtual void setParent(Drawable* parent) override {
-            Drawable::setParent(parent);
-            shape.setPosition(getGloblX(), getGlobalY());
-        }
         
-        virtual void setX(float x) {
+        virtual void setX(float x) override {
             localPosition.x = x;
-            shape.setPosition(getGloblX(), getGlobalY());
+            Drawable::setX(x);
         }
         
-        virtual void setY(float y) {
+        virtual void setY(float y) override {
             localPosition.y = y;
+            Drawable::setY(y);
+        }
+
+        virtual void setWidth(float width) override {
+            auto tmpSize = shape.getSize();
+            tmpSize.x = width;
+            shape.setSize(tmpSize);
+            Drawable::setWidth(width);
+        }
+        
+        virtual void setHeight(float height) override {
+            auto tmpSize = shape.getSize();
+            tmpSize.y = height;
+            shape.setSize(tmpSize);
+            Drawable::setHeight(height);
+        }
+
+        virtual void invalidate() override {
             shape.setPosition(getGloblX(), getGlobalY());
         }
 
-        virtual void setWidth(float width) {
-            auto tmpWidth = shape.getSize();
-            tmpWidth.x = width;
-            shape.setSize(tmpWidth);
-        }
-        
-        virtual void setHeight(float height) {
-            auto tmpWidth = shape.getSize();
-            tmpWidth.y = height;
-            shape.setSize(tmpWidth);
-        }
-        
-
-        virtual float getX() const {
+        virtual float getX() const override {
             return localPosition.x;
         }
         
-        virtual float getY() const {
+        virtual float getY() const override {
             return localPosition.y;
         }
 
-        virtual float getWidth() const {
+        virtual float getWidth() const override {
             return shape.getSize().x;
         }
         
-        virtual float getHeight() const {
+        virtual float getHeight() const override {
             return shape.getSize().y;
         }
 

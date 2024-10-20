@@ -21,6 +21,10 @@ namespace gui {
     }
 
     void DebugOverlay::draw(sf::RenderWindow& target) {
+        if (!visible) {
+            return;
+        }
+        
         /* Common */
         *this << "Dt=" << static_cast<int>(common.deltaTimeSec * 1000000) / 1000.0F << "ms\n";
         *this << "ProcEvents: BatchSize=" << common.processEventBatchSize << ", execPeakTime=" << static_cast<int>(common.processEventProcessTimeSec * 1000000) << "us\n";

@@ -43,6 +43,8 @@ namespace gui {
 
         Common common;
 
+        bool visible{true};
+
     private:
         sf::Text text;
 

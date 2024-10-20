@@ -1,4 +1,4 @@
-#include "View.hpp"
+#include "GameGUI.hpp"
 
 #include <iostream>
 
@@ -6,7 +6,7 @@
 
 namespace gui {
 
-    View::View(const sf::RenderWindow& window) : ViewBase(), btn2{gui::FontManager::Style::LATO_REGULAR, "Hello"} {
+    GameGUI::GameGUI(const sf::RenderWindow& window) : GUIBase(), btn2{gui::FontManager::Style::LATO_REGULAR, "Hello"} {
         setParent(nullptr);
         setPosition(0, 0, window.getSize().x, window.getSize().y);
 
@@ -32,7 +32,14 @@ namespace gui {
         std::cout << "btn2: " << btn2 << std::endl;
     }
     
-    void View::onButtonClicked(gui::GenericButton* button) {
+    void GameGUI::onButtonClicked(gui::GenericButton* button) {
         std::cout << "Button clicked: " << *button << std::endl;
     }
+
+    
+    void GameGUI::setWidth(float width) {
+        box1.setWidth(width - 32);
+        GUIBase::setWidth(width);
+    }
+
 }

@@ -14,78 +14,64 @@ namespace gui {
         
         void add(Drawable* drawable);
         
-        virtual void tick(float dt) {
-            if (isVisible()) {
-                for (auto drawable: drawables) {
-                    drawable->tick(dt);
-                }
-            }
-        }
+        virtual void tick(float dt) override;
 
-        virtual void draw(sf::RenderWindow& target) {
-            if (isVisible()) {
-                for (auto drawable: drawables) {
-                    drawable->draw(target);
-                }
-            }
-        }
+        virtual void draw(sf::RenderWindow& target) override;
         
-        virtual void processEvents(const gui::ClickEvent& event) {
-            if (isVisible() && isTouchable()) {
-                for (auto drawable: drawables) {
-                    drawable->processEvents(event);
-                }
-            }
-        }
+        virtual void processEvents(const gui::ClickEvent& event) override;
 
-        virtual void setX(float x) {
+        virtual void invalidate() override;
+
+        virtual void setX(float x) override {
             this->x = x;
+            Drawable::setX(x);
         }
         
-        virtual void setY(float y) {
+        virtual void setY(float y) override {
             this->y = y;
+            Drawable::setY(y);
         }
 
-        virtual void setWidth(float width) {
+        virtual void setWidth(float width) override {
             this->width = width;
+            Drawable::setWidth(width);
         }
         
-        virtual void setHeight(float height) {
+        virtual void setHeight(float height) override {
             this->height = height;
+            Drawable::setHeight(height);
         }
-        
 
-        virtual float getX() const {
+        virtual float getX() const override {
             return x;
         }
         
-        virtual float getY() const {
+        virtual float getY() const override {
             return y;
         }
 
-        virtual float getWidth() const {
+        virtual float getWidth() const override {
             return width;
         }
         
-        virtual float getHeight() const {
+        virtual float getHeight() const override {
             return height;
         }
 
-        
-        virtual void setVisible(bool visible) {
+        virtual void setVisible(bool visible) override {
             this->visible = visible;
+            Drawable::setVisible(visible);
         }
 
-        virtual bool isVisible() const {
+        virtual bool isVisible() const override {
             return visible;
         }
 
-        
-        virtual void setTouchable(bool touchable) {
+        virtual void setTouchable(bool touchable) override {
             this->touchable = touchable;
         }
         
-        virtual bool isTouchable() const {
+        virtual bool isTouchable() const override {
             return touchable;
         }
 

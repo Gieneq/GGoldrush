@@ -20,21 +20,21 @@ namespace gui {
             this->listener = listener;
         }
     
-    
-        virtual void setVisible(bool visible) {
+        virtual void setVisible(bool visible) override {
             this->visible = visible;
+            Drawable::setVisible(visible);
         }
 
-        virtual bool isVisible() const {
+        virtual bool isVisible() const override {
             return visible;
         }
 
         
-        virtual void setTouchable(bool touchable) {
+        virtual void setTouchable(bool touchable) override {
             this->touchable = touchable;
         }
         
-        virtual bool isTouchable() const {
+        virtual bool isTouchable() const override {
             return touchable;
         }
 

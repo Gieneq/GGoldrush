@@ -2,7 +2,7 @@
 
 #include <SFML/Graphics.hpp>
 
-#include <gui/view/ViewBase.hpp>
+#include <gui/GUIBase.hpp>
 
 #include <gui/button/PlainButton.hpp>
 #include <gui/button/PlainTextButton.hpp>
@@ -10,12 +10,14 @@
 
 namespace gui {
 
-    class View : public ViewBase {
+    class GameGUI : public GUIBase {
     public:
-        View(const sf::RenderWindow& window);
+        GameGUI(const sf::RenderWindow& window);
 
     protected:
         void onButtonClicked(gui::GenericButton* button) override;
+
+        virtual void setWidth(float width) override;
 
     private:
         gui::Container cnt1;

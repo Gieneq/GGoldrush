@@ -9,9 +9,9 @@
 
 namespace gui {
 
-    class ViewBase : public Container, protected ButtonClickListener {
+    class GUIBase : public Container, protected ButtonClickListener {
     public:
-        ViewBase();
+        GUIBase();
 
     protected:
         virtual void onButtonClicked(gui::GenericButton* button) override {}
