@@ -1,6 +1,8 @@
 #include "Storage.hpp"
 
 #include <iostream>
+#include <sstream> 
+#include <vector>
 
 namespace game {
 
@@ -68,6 +70,9 @@ namespace game {
 
     void Storage::moveItemTo(ItemType type, Storage& destinationStorage, Quantity quantity) {
         // Extract the item from the current storage
+        if (!quantity.isAll() && quantity.getQuantity() == 0) {
+            return;
+        }
         try {
             // Try to extract the specified item with the optional quantity from the source storage
             Item extractedItem = extract(type, quantity);
@@ -88,11 +93,65 @@ namespace game {
             }
         } catch (const ItemNotFoundException&) {
             std::cerr << "Item not found in the source storage.\n";
-            throw;
+            /* Should not happen - ignore */
         } catch (const Item::QuantityException&) {
             std::cerr << "Invalid quantity requested from the source storage.\n";
-            throw;
+            /* Should not happen - ignore */
         }
+    }
+
+    void game::Storage::moveAnyItemsTo(Storage& destinationStorage) {
+        // Create a temporary list of item types to avoid iterator invalidation during iteration
+        std::vector<ItemType> itemsToMove;
+        for (const auto& itemEntry : items) {
+            itemsToMove.push_back(itemEntry.first);
+        }
+
+        // Try to move each item to the destination storage
+        for (const auto& itemType : itemsToMove) {
+            const int quantityToMove = destinationStorage.itemsMaxCount.isAll() 
+            ? getQuantityOf(itemType) 
+            : std::min(getQuantityOf(itemType), (destinationStorage.itemsMaxCount.getQuantity() - destinationStorage.getOverallItemsCount()));
+
+            if (quantityToMove > 0) {
+                try {
+                    moveItemTo(itemType, destinationStorage, quantityToMove);
+                } catch (const NoCapacityException&) {
+                    throw;
+                } catch (const NoSlotsException&) {
+                    //just pass
+                }
+            }
+        }
+    }
+
+    int Storage::getQuantityOf(ItemType type) const noexcept {
+        const auto it = items.find(type);
+        if (it == items.end()) {
+            return 0;
+        }
+        return it->second.getQuantity();
+    }
+
+    std::string Storage::toString() const {
+        std::ostringstream oss;
+
+        if (items.empty()) {
+            oss << "Storage is empty.";
+            return oss.str();
+        }
+
+        // Iterate through the storage and print item type and quantity
+        oss << "Storage contents:\n";
+        for (const auto& itemEntry : items) {
+            const ItemType& itemType = itemEntry.first;
+            const Item& item = itemEntry.second;
+
+            oss << "- " << game::ItemsManager::get().findMeta(itemType).name 
+                << ": " << item.getQuantity() << "\n";
+        }
+
+        return oss.str();
     }
 
 }

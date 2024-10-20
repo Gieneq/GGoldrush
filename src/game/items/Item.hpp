@@ -49,6 +49,11 @@ namespace game {
     class Item {
     public:
         
+        class InvalidTypeException : std::runtime_error {
+        public:
+            InvalidTypeException() : std::runtime_error("Invalid item type.") {}
+        };
+        
         class MetaNotMatchException : std::runtime_error {
         public:
             MetaNotMatchException() : std::runtime_error("Items meta not the same!") {}
@@ -167,6 +172,7 @@ namespace game {
 
         Item createItem(ItemType type, int quantity = 1);
 
+        const ItemMeta& findMeta(ItemType type);
     };
 
 }

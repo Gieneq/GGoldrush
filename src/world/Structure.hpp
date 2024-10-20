@@ -9,7 +9,7 @@ namespace world {
     class Structure : public world::Object {
     protected:
     friend class ObjectsBuilder;
-        Structure(const sf::Vector2i& gridPosition, const assets::Tileset& tileset, size_t tileIndex);
+        Structure(World& parentWorld, const sf::Vector2i& gridPosition, const assets::Tileset& tileset, size_t tileIndex);
 
     public:
         virtual void tick() override {}

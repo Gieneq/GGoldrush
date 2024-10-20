@@ -4,13 +4,14 @@
 
 #include "assets/AssetsManager.hpp"
 #include "Picker.hpp"
+#include "ClickableObject.hpp"
 
 namespace world {
 
     class Object : public ClickableObject {
     protected:
     friend class ObjectsBuilder;
-        Object(const sf::Vector2i& gridPosition, const assets::Tileset& tileset, size_t tileIndex);
+        Object(World& parentWorld, const sf::Vector2i& gridPosition, const assets::Tileset& tileset, size_t tileIndex);
         virtual ~Object() = default;
         Object(const Object&) = delete;
         Object& operator=(const Object&) = delete;

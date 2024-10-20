@@ -7,6 +7,10 @@ namespace game {
     class Player {
     public:
         Player() {}
+
+        Storage& getStorage() {
+            return storage;
+        }
         
     private:
         Storage storage;

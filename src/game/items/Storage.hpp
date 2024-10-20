@@ -70,6 +70,10 @@ namespace game {
         
         void moveItemTo(ItemType type, Storage& destinationStorage, Quantity quantity = Quantity::ALL());
 
+        void moveAnyItemsTo(Storage& destinationStorage);
+
+        int getQuantityOf(ItemType type) const noexcept;
+
         // Add iterator support (range-based for loop)
         auto begin() { return items.begin(); }
         auto end() { return items.end(); }
@@ -94,6 +98,8 @@ namespace game {
             return it->second;
         }
 
+        std::string Storage::toString() const;
+
     protected:
         std::unordered_map<ItemType, Item> items;
         Quantity slotsMaxCount;
@@ -101,12 +107,4 @@ namespace game {
         int recentItemsCount{0};
     };
 
-
-    // class SlotsLimitedStorage : public Storage {
-
-    // };
-
-    // class CapacityLimitedStorage : public Storage {
-
-    // };
 }

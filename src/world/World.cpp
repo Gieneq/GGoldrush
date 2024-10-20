@@ -7,9 +7,11 @@
 #include "Structure.hpp"
 #include "structures/Resourcer.hpp"
 
+#include "ObjectsBuilder.hpp"
+
 namespace world {
 
-    World::World(const sf::Vector2u& size) : size{size} {
+    World::World(const sf::Vector2u& size) : size{size}, objectsBuilder{new ObjectsBuilder{*this}} {
         picker.addListener(this);
         buildTest();
     }
@@ -58,14 +60,6 @@ namespace world {
         picker.processEvents(event, mouseCameraPosition);
     }
 
-    // Tile* World::createTile(const sf::Vector2i& gridPosition, const assets::Tileset& tileset, const size_t tileIdx) {
-    //     const auto newTile = new Tile(gridPosition, tileset, tileIdx, 225);
-
-    //     groundTiles.push_back(newTile);
-
-    //     return newTile;
-    // }
-
     void World::onClickableObjectEvent(ClickableObject* cobj, Event evt) {
         switch (evt) {
         case ClickableObjectListener::Event::ReleasedLMB :
@@ -95,16 +89,16 @@ namespace world {
         for (int iy = 0; iy < size.y; iy++) {
             for (int ix = 0; ix < size.x; ix++) {
 
-                const auto newTile = iy < 4 ? objectsBuilder.createTileGrass({ix, iy}) : objectsBuilder.createTileDirt({ix, iy});
+                const auto newTile = iy < 4 ? objectsBuilder->createTileGrass({ix, iy}) : objectsBuilder->createTileDirt({ix, iy});
                 groundTiles.push_back(newTile);
 
             }
         }
 
-        const auto forest1 = objectsBuilder.createResourcerForst({0, 1});
+        const auto forest1 = objectsBuilder->createResourcerForst({0, 1});
         structures.push_back(forest1);
         
-        const auto sawmill1 = objectsBuilder.createExtractorSawmill({3, 0});
+        const auto sawmill1 = objectsBuilder->createExtractorSawmill({3, 0});
         // structures.push_back(sawmill1);
     }
 

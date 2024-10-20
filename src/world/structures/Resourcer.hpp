@@ -9,6 +9,7 @@
 #include <game/items/Item.hpp>
 #include <assets/AssetsManager.hpp>
 #include <common/AnimatedSprite.hpp>
+#include <game/items/Storage.hpp>
 
 namespace world {
 
@@ -22,6 +23,7 @@ namespace world {
     private:
     friend class ObjectsBuilder;
         Resourcer(
+            World& parentWorld, 
             Type type, 
             const sf::Vector2i& gridPosition, 
             const assets::Tileset& tileset, 
@@ -39,6 +41,8 @@ namespace world {
 
         virtual void onReleasedLMB() override;
 
+        virtual void onReleasedRMB() override;
+
         virtual std::string toString() const override;
         
         virtual std::string getBrief() const override;
@@ -51,6 +55,8 @@ namespace world {
         int extractingCounter{0};
 
         bool extracting{false};
+
+        game::Storage outputStyorage{game::Storage::Quantity::ALL(), 3};
 
         Type type;
     };

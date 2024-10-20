@@ -22,6 +22,7 @@ namespace world {
     private:
     friend class ObjectsBuilder;
         Tile(
+            World& parentWorld, 
             Type type, 
             const sf::Vector2i& gridPosition, 
             const assets::Tileset& tileset, 

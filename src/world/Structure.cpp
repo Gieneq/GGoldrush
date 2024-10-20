@@ -9,8 +9,8 @@
 
 namespace world {
 
-    Structure::Structure(const sf::Vector2i& gridPosition, const assets::Tileset& tileset, size_t tileIndex) 
-        : world::Object(gridPosition, tileset, tileIndex) {
+    Structure::Structure(World& parentWorld, const sf::Vector2i& gridPosition, const assets::Tileset& tileset, size_t tileIndex) 
+        : world::Object(parentWorld, gridPosition, tileset, tileIndex) {
 
         // const auto worldPosition = world::Camera::gridToWorldSpace(gridPosition);
         // const auto cameraPosition = world::Camera::worldToCameraSpace(worldPosition);

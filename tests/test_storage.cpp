@@ -130,3 +130,94 @@ TEST(StorageTest, AddEmptyItemNotThrowsException) {
     ASSERT_EQ(storage.getOverallItemsCount(), 0);  
     EXPECT_THROW(storage[ItemType::RAW_WOOD].getQuantity(), Storage::ItemNotFoundException); 
 }
+
+TEST(StorageTest, MoveAnyItemsPossibleBetweenStorages) {
+    Storage storageFrom;  
+    Storage storageTo{2, 20};
+
+    // Setup storage
+    storageFrom.add(ItemsManager::get().createItem(ItemType::RAW_WOOD, 10));
+    storageFrom.add(ItemsManager::get().createItem(ItemType::PLANK, 4));
+
+    storageFrom.moveAnyItemsTo(storageTo);
+
+    ASSERT_EQ(storageFrom.getOccupiedSlotsCount(), 0); 
+    ASSERT_EQ(storageFrom.getOverallItemsCount(), 0); 
+    EXPECT_THROW(storageFrom[ItemType::RAW_WOOD].getQuantity(), Storage::ItemNotFoundException); 
+    EXPECT_THROW(storageFrom[ItemType::PLANK].getQuantity(), Storage::ItemNotFoundException); 
+    ASSERT_EQ(storageFrom.getQuantityOf(ItemType::RAW_WOOD), 0); 
+    ASSERT_EQ(storageFrom.getQuantityOf(ItemType::PLANK), 0);
+
+    ASSERT_EQ(storageTo.getOccupiedSlotsCount(), 2); 
+    ASSERT_EQ(storageTo.getOverallItemsCount(), 14); 
+    ASSERT_EQ(storageTo[ItemType::RAW_WOOD].getQuantity(), 10); 
+    ASSERT_EQ(storageTo[ItemType::PLANK].getQuantity(), 4); 
+    ASSERT_EQ(storageTo.getQuantityOf(ItemType::RAW_WOOD), 10); 
+    ASSERT_EQ(storageTo.getQuantityOf(ItemType::PLANK), 4);  
+}
+
+TEST(StorageTest, MoveAnyItemsPossibleBetweenStoragesWhileNotEnoughSpace) {
+    Storage storageFrom;  
+    Storage storageTo{2, 12};
+
+    // Setup storage
+    storageFrom.add(ItemsManager::get().createItem(ItemType::RAW_WOOD, 10));
+    storageFrom.add(ItemsManager::get().createItem(ItemType::PLANK, 4));
+
+    storageFrom.moveAnyItemsTo(storageTo);
+
+    ASSERT_EQ(storageFrom.getOccupiedSlotsCount(), 1); 
+    ASSERT_EQ(storageFrom.getOverallItemsCount(), 2); 
+    EXPECT_THROW(storageFrom[ItemType::RAW_WOOD].getQuantity(), Storage::ItemNotFoundException); 
+    ASSERT_EQ(storageFrom.getQuantityOf(ItemType::PLANK), 2);
+
+    ASSERT_EQ(storageTo.getOccupiedSlotsCount(), 2); 
+    ASSERT_EQ(storageTo.getOverallItemsCount(), 12); 
+    ASSERT_EQ(storageTo[ItemType::RAW_WOOD].getQuantity(), 10); 
+    ASSERT_EQ(storageTo[ItemType::PLANK].getQuantity(), 2); 
+}
+
+TEST(StorageTest, MoveAnyItemsPossibleBetweenStoragesWhileNotEnoughSlots) {
+    Storage storageFrom;  
+    Storage storageTo{1, 12};
+
+    // Setup storage
+    storageFrom.add(ItemsManager::get().createItem(ItemType::RAW_WOOD, 10));
+    storageFrom.add(ItemsManager::get().createItem(ItemType::PLANK, 4));
+
+    storageFrom.moveAnyItemsTo(storageTo);
+
+    ASSERT_EQ(storageFrom.getOccupiedSlotsCount(), 1); 
+    ASSERT_EQ(storageFrom.getOverallItemsCount(), 4); 
+    EXPECT_THROW(storageFrom[ItemType::RAW_WOOD].getQuantity(), Storage::ItemNotFoundException); 
+    ASSERT_EQ(storageFrom.getQuantityOf(ItemType::PLANK), 4);
+
+    ASSERT_EQ(storageTo.getOccupiedSlotsCount(), 1); 
+    ASSERT_EQ(storageTo.getOverallItemsCount(), 10); 
+    ASSERT_EQ(storageTo[ItemType::RAW_WOOD].getQuantity(), 10); 
+    EXPECT_THROW(storageTo[ItemType::PLANK].getQuantity(), Storage::ItemNotFoundException); 
+}
+
+TEST(StorageTest, MoveAnyItemsPossibleBetweenStoragesWhileTargetHasSlotToFillup) {
+    Storage storageFrom;  
+    Storage storageTo{2, 20};
+
+    // Setup storage
+    storageFrom.add(ItemsManager::get().createItem(ItemType::RAW_WOOD, 10));
+    storageFrom.add(ItemsManager::get().createItem(ItemType::PLANK, 4));
+
+    storageTo.add(ItemsManager::get().createItem(ItemType::PLANK, 5));
+    storageTo.add(ItemsManager::get().createItem(ItemType::RAW_WOOD, 3));
+
+    storageFrom.moveAnyItemsTo(storageTo);
+
+    ASSERT_EQ(storageFrom.getOccupiedSlotsCount(), 1); 
+    ASSERT_EQ(storageFrom.getOverallItemsCount(), 2); 
+    EXPECT_THROW(storageFrom[ItemType::RAW_WOOD].getQuantity(), Storage::ItemNotFoundException); 
+    ASSERT_EQ(storageFrom.getQuantityOf(ItemType::PLANK), 2);
+
+    ASSERT_EQ(storageTo.getOccupiedSlotsCount(), 2); 
+    ASSERT_EQ(storageTo.getOverallItemsCount(), 20); 
+    ASSERT_EQ(storageTo[ItemType::RAW_WOOD].getQuantity(), 13); 
+    ASSERT_EQ(storageTo[ItemType::PLANK].getQuantity(), 7); 
+}

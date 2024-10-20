@@ -10,12 +10,13 @@
 namespace world {
 
     Tile::Tile(
+        World& parentWorld, 
         Type type, 
         const sf::Vector2i& gridPosition, 
         const assets::Tileset& tileset, 
         size_t tileIndexTop, 
         std::optional<size_t> tileIndexWalls) 
-        : type{type}, world::Object(gridPosition, tileset, tileIndexTop), tileIndexWalls{tileIndexWalls} {
+        : type{type}, world::Object(parentWorld, gridPosition, tileset, tileIndexTop), tileIndexWalls{tileIndexWalls} {
 
         const auto worldPosition = world::Camera::gridToWorldSpace(gridPosition);
         const auto cameraPosition = world::Camera::worldToCameraSpace(worldPosition);

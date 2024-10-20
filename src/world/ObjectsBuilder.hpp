@@ -1,10 +1,10 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+#include "World.hpp"
 
 namespace world {
 
-    class World;
     class Tile;
     class Resourcer;
     class Extractor;
@@ -12,7 +12,9 @@ namespace world {
     class ObjectsBuilder {
         friend class World;
 
-        ObjectsBuilder(World const* world) : world{world} {}
+        explicit ObjectsBuilder(World& world) : world{world} {}
+
+        ~ObjectsBuilder() = default;
 
         Tile* createTileGrass(const sf::Vector2i& gridPosition);
 
@@ -22,7 +24,7 @@ namespace world {
 
         Extractor* createExtractorSawmill(const sf::Vector2i& gridPosition);
 
-        World const* world;
+        World& world;
     };
 
 } 

@@ -9,38 +9,7 @@
 
 namespace world {
 
-    class ClickableObject {
-    friend class Picker;
-    public:
-        ClickableObject(bool clickableEnabled = true) : clickable{clickableEnabled} {}
-        virtual ~ClickableObject() = default;
-
-        virtual void onReleasedLMB() {}
-        
-        virtual void onReleasedRMB() {}
-        
-        virtual void onHoverEnter() {}
-        
-        virtual void onHoverLeave() {}
-
-        bool clickable;
-
-        virtual std::string toString() const;
-        
-        virtual std::string getBrief() const;
-
-    private:
-        bool hovered{false};
-
-        virtual bool isMouseInsideShape(const sf::Vector2f& mouseCameraPosition) {
-            return false;
-        }
-        
-    };
-
-    inline std::ostream& operator<<(std::ostream& os, const world::ClickableObject& so) {
-        return os << so.toString();
-    }
+    class ClickableObject;
 
     class ClickableObjectListener {
     public:

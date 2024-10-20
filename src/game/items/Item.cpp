@@ -39,47 +39,47 @@ namespace game {
         return combinedItem;
     }
 
-Item Item::operator-(Item&& other) {
-    if (meta != other.meta) {
-        throw MetaNotMatchException();
-    }
-    if (quantity < other.quantity) {
-        throw QuantityException();
-    }
-    if (isCorrupted() || other.isCorrupted()) {
-        throw CorruptionException();
-    }
+    Item Item::operator-(Item&& other) {
+        if (meta != other.meta) {
+            throw MetaNotMatchException();
+        }
+        if (quantity < other.quantity) {
+            throw QuantityException();
+        }
+        if (isCorrupted() || other.isCorrupted()) {
+            throw CorruptionException();
+        }
 
-    // Create the result item with the reduced quantity
-    Item result(*meta, quantity - other.quantity);
-    
-    // Corrupt both items
-    quantity = 0;
-    meta = nullptr;
+        // Create the result item with the reduced quantity
+        Item result(*meta, quantity - other.quantity);
+        
+        // Corrupt both items
+        quantity = 0;
+        meta = nullptr;
 
-    other.quantity = 0;
-    other.meta = nullptr;
+        other.quantity = 0;
+        other.meta = nullptr;
 
-    return result;
-}
+        return result;
+    }
 
     Item& Item::operator+=(Item&& other) {
-    if (meta != other.meta) {
-        throw MetaNotMatchException();
+        if (meta != other.meta) {
+            throw MetaNotMatchException();
+        }
+        if (isCorrupted() || other.isCorrupted()) {
+            throw CorruptionException();
+        }
+
+        // Add the quantity from the other item
+        quantity += other.quantity;
+
+        // Corrupt the other item
+        other.quantity = 0;
+        other.meta = nullptr;
+
+        return *this;
     }
-    if (isCorrupted() || other.isCorrupted()) {
-        throw CorruptionException();
-    }
-
-    // Add the quantity from the other item
-    quantity += other.quantity;
-
-    // Corrupt the other item
-    other.quantity = 0;
-    other.meta = nullptr;
-
-    return *this;
-}
 
     Item& Item::operator+=(int qty) {
         if (this->quantity + qty < 0) {
@@ -90,26 +90,26 @@ Item Item::operator-(Item&& other) {
         return *this;
     }
 
-Item& Item::operator-=(Item&& other) {
-    if (meta != other.meta) {
-        throw MetaNotMatchException();
-    }
-    if (isCorrupted() || other.isCorrupted()) {
-        throw CorruptionException();
-    }
-    if (quantity < other.quantity) {
-        throw QuantityException();
-    }
+    Item& Item::operator-=(Item&& other) {
+        if (meta != other.meta) {
+            throw MetaNotMatchException();
+        }
+        if (isCorrupted() || other.isCorrupted()) {
+            throw CorruptionException();
+        }
+        if (quantity < other.quantity) {
+            throw QuantityException();
+        }
 
-    // Subtract the quantity from the current item
-    quantity -= other.quantity;
+        // Subtract the quantity from the current item
+        quantity -= other.quantity;
 
-    // Corrupt the other item
-    other.quantity = 0;
-    other.meta = nullptr;
+        // Corrupt the other item
+        other.quantity = 0;
+        other.meta = nullptr;
 
-    return *this;
-}
+        return *this;
+    }
         
     Item& Item::operator-=(int qty) {
         if (this->quantity - qty < 0) {
@@ -198,12 +198,16 @@ Item& Item::operator-=(Item&& other) {
     }
     
     Item ItemsManager::createItem(ItemType type, int quantity) {
+        return Item(findMeta(type), quantity);
+    }
+
+    const ItemMeta& ItemsManager::findMeta(ItemType type) {
         auto it = itemMetas.find(type);
         if (it == itemMetas.end()) {
-            throw std::invalid_argument("Invalid ItemType provided to createItem.");//TODO better exception
+            throw Item::InvalidTypeException();
         }
         const ItemMeta& itemMeta = it->second;
-        return Item(itemMeta, quantity);
+        return itemMeta;
     }
 
 }

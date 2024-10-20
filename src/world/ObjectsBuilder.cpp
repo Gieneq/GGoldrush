@@ -19,6 +19,7 @@ namespace world {
         const size_t topTileIndex = 0;
         const size_t bordersIndex = 225;
         return new Tile(
+            world,
             Tile::Type::GRASS,
             gridPosition,
             tileset,
@@ -31,6 +32,7 @@ namespace world {
         const size_t topTileIndex = 2;
         const size_t bordersIndex = 225;
         return new Tile(
+            world,
             Tile::Type::DIRT,
             gridPosition,
             tileset,
@@ -42,6 +44,7 @@ namespace world {
         const auto& tileset = assets::AssetsManager::getInstane().getTileset(assets::AssetId::OBJECTS_1X4);
         const auto& tilesetExtractionIcon = assets::AssetsManager::getInstane().getTileset(assets::AssetId::EXTRACTIONS);
         return new Resourcer(
+            world,
             Resourcer::Type::FOREST, 
             gridPosition, 
             tileset, 

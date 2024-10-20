@@ -4,12 +4,12 @@
 #include <exception>
 
 #include <common/Utils.hpp>
-#include <world/Camera.hpp>
+#include "Camera.hpp"
 
 namespace world {
 
-    Object::Object(const sf::Vector2i& gridPosition, const assets::Tileset& mainTileset, size_t mainTileIndex) 
-        : ClickableObject(), mainTileset{mainTileset}, mainTileIndex{mainTileIndex}, gridPosition{gridPosition} {
+    Object::Object(World& parentWorld, const sf::Vector2i& gridPosition, const assets::Tileset& mainTileset, size_t mainTileIndex) 
+        : ClickableObject(parentWorld), mainTileset{mainTileset}, mainTileIndex{mainTileIndex}, gridPosition{gridPosition} {
         const auto worldPosition = world::Camera::gridToWorldSpace(gridPosition);
         const auto cameraPosition = world::Camera::worldToCameraSpace(worldPosition);
 

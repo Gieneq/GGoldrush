@@ -4,8 +4,12 @@
 
 #include <gui/Debug.hpp>
 
+#include <world/World.hpp>
+
+#include <world/ClickableObject.hpp>
+
 namespace world {
- 
+    
     std::string ClickableObject::toString() const {
         return "ClickableObject(clickable=" + std::to_string(clickable) + ")";
     }

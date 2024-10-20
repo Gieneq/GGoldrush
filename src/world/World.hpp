@@ -2,11 +2,11 @@
 
 #include <SFML/Graphics.hpp>
 
+#include <optional>
 #include <vector>
 
 #include "Camera.hpp"
 #include "Picker.hpp"
-#include "ObjectsBuilder.hpp"
 
 #include <common/Properties.hpp>
 #include <game/Player.hpp>
@@ -15,6 +15,7 @@ namespace world {
 
     class Tile;
     class Structure;
+    class ObjectsBuilder;
 
     class World : ClickableObjectListener {
     public:
@@ -29,10 +30,12 @@ namespace world {
         Camera& getCamera() {
             return camera;
         }
+
+        game::Player& getPlayer() {
+            return player;
+        }
         
         void processEvents(const sf::Event& event, const sf::Vector2i& mousePosition);
-
-        // Tile* createTile(const sf::Vector2i& gridPosition, const assets::Tileset& tileset, const size_t tileIdx);
 
     private:
         void onClickableObjectEvent(ClickableObject* cobj, Event evt) override;
@@ -47,7 +50,7 @@ namespace world {
 
         std::vector<Tile*> groundTiles;
 
-        ObjectsBuilder objectsBuilder{this};
+        ObjectsBuilder* objectsBuilder;
 
         Picker picker;
 
