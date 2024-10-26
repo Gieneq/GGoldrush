@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-#include <gui/guis/GameGUI.hpp>
+#include <gui/guis/game/GameGUI.hpp>
 #include <gui/common/events.hpp>
 #include <gui/font/FontManger.hpp>
 #include <gui/Debug.hpp>
@@ -23,7 +23,7 @@ int main() {
     world.getCamera().sameAs(windowView);
     world.getCamera().lookAt({0,0});
 
-    gui::GameGUI gameGUI(window);
+    // gui::GameGUI gameGUI(window);
     gui::ClickEventsExtractor clicEventsExtractor;
 
     sf::Clock loopTimeMeasure;
@@ -48,12 +48,14 @@ int main() {
                     event.size.height = minimalSize.y;
                     window.setSize({window.getSize().x, event.size.height});
                 }
+
                 const float newWidth = static_cast<float>(event.size.width);
                 const float newHeight = static_cast<float>(event.size.height);
                 std::cout << "Resized to: " << newWidth << " x " << newHeight << std::endl;
                 windowView.setSize(newWidth, newHeight);
                 windowView.setCenter({newWidth/2, newHeight/2});
-                gameGUI.setPosition(0, 0, newWidth, newHeight);
+                // gameGUI.setPosition(0, 0, newWidth, newHeight);
+                // gameGUI.onResize(newWidth, newHeight);
                 
                 world.getCamera().sameAs(windowView);
             }
@@ -74,7 +76,7 @@ int main() {
                 /* LMB events */
                 const auto clickEventResult = clicEventsExtractor.extract(event, mouseScreenPosition);
                 if (clickEventResult.has_value()) {
-                    gameGUI.processEvents(clickEventResult.value());
+                    // gameGUI.processEvents(clickEventResult.value());
                 }
 
                 /* Other events */
@@ -95,8 +97,8 @@ int main() {
 
         /* GUI ontop */
         window.setView(windowView);
-        gameGUI.tick(deltaTimeSec);
-        gameGUI.draw(window);
+        // gameGUI.tick(deltaTimeSec);
+        // gameGUI.draw(window);
         gui::DebugOverlay::get().draw(window);
         window.display();
     }

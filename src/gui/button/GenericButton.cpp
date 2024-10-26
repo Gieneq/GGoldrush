@@ -1,40 +1,40 @@
-#include "GenericButton.hpp"
+// #include "GenericButton.hpp"
 
-#include <iostream>
+// #include <iostream>
 
-namespace gui {
+// namespace gui {
 
-    GenericButton::GenericButton() : listener{nullptr}, visible{true}, touchable{true}, pressed{false} {
-        uponRelease();
-    }
+//     GenericButton::GenericButton() : listener{nullptr}, visible{true}, touchable{true}, pressed{false} {
+//         uponRelease();
+//     }
     
-    void GenericButton::processEvents(const gui::ClickEvent& event) {
-        if (isVisible() && isTouchable()) {
+//     void GenericButton::processEvents(const gui::ClickEvent& event) {
+//         if (isVisible() && isTouchable()) {
 
-            if (isPointInsideGlobally(event.mousePosition.x, event.mousePosition.y)) {
+//             if (isPointInsideGlobally(event.mousePosition.x, event.mousePosition.y)) {
                 
-                if (event.type == gui::ClickEvent::Type::RELEASED) {
-                    pressed = false;
-                    uponRelease();
+//                 if (event.type == gui::ClickEvent::Type::RELEASED) {
+//                     pressed = false;
+//                     uponRelease();
 
-                    /* Is click released inside button */
-                    if (listener) {
-                        listener->onButtonClicked(this);
-                    }
+//                     /* Is click released inside button */
+//                     if (listener) {
+//                         listener->onButtonClicked(this);
+//                     }
                         
-                } 
-                else if (event.type == gui::ClickEvent::Type::PRESSED) {
-                    pressed = true;
-                    uponPress();
-                }
+//                 } 
+//                 else if (event.type == gui::ClickEvent::Type::PRESSED) {
+//                     pressed = true;
+//                     uponPress();
+//                 }
 
-            }
-            else if (isPressed()) {
-                pressed = false;
-                uponRelease();
-            }
+//             }
+//             else if (isPressed()) {
+//                 pressed = false;
+//                 uponRelease();
+//             }
 
-        }
-    }
+//         }
+//     }
 
-}
+// }

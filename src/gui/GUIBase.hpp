@@ -1,19 +1,21 @@
-#pragma once
+// #pragma once
 
-#include <SFML/Graphics.hpp>
+// #include <SFML/Graphics.hpp>
 
-#include <gui/container/Container.hpp>
+// #include <gui/container/Container.hpp>
 
-#include <gui/button/GenericButton.hpp>
+// #include <gui/button/GenericButton.hpp>
 
 
-namespace gui {
+// namespace gui {
 
-    class GUIBase : public Container, protected ButtonClickListener {
-    public:
-        GUIBase();
+//     class GUIBase : public Container, protected ButtonClickListener {
+//     public:
+//         GUIBase();
 
-    protected:
-        virtual void onButtonClicked(gui::GenericButton* button) override {}
-    };
-}
+//         virtual void onResize(float newWidth, float newHeight) override;
+
+//     protected:
+//         virtual void onButtonClicked(gui::GenericButton* button) override {}
+//     };
+// }

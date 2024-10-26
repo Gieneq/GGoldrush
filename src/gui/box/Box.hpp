@@ -8,18 +8,27 @@ namespace gui {
 
     class Box : public Drawable {
     public:
-        Box();
+        Box() : Drawable(), visible{true} {
+            shape.setFillColor(style::DEFAULT_BG_COLOR);
+            shape.setSize({20,10});
+        }
+        
+        virtual void recalculate() override {
+            shape.setPosition(getGlobalX(), getGlobalY());
+        }
 
-        void draw(sf::RenderWindow& target) override;
+        void draw(sf::RenderWindow& target) {
+            if (isVisible()) {
+                target.draw(shape);
+            }
+        }
     
         virtual void setParent(Drawable* parent) override {
             Drawable::setParent(parent);
-            invalidate();
         }
 
         virtual void setVisible(bool visible) override {
             this->visible = visible;
-            Drawable::setVisible(visible);
         }
 
         virtual bool isVisible() const override {
@@ -31,20 +40,6 @@ namespace gui {
         
         virtual bool isTouchable() const override {
             return false;
-        }
-
-        virtual void invalidate() override {
-            shape.setPosition(getGloblX(), getGlobalY());
-        }
-
-        virtual void setX(float x) override {
-            localPosition.x = x;
-            Drawable::setX(x);
-        }
-    
-        virtual void setY(float y) override {
-            localPosition.y = y;
-            Drawable::setY(y);
         }
 
         virtual void setWidth(float width) override {
@@ -60,15 +55,6 @@ namespace gui {
             shape.setSize(tmpSize);
             Drawable::setHeight(height);
         }
-        
-
-        virtual float getX() const override {
-            return localPosition.x;
-        }
-        
-        virtual float getY() const override {
-            return localPosition.y;
-        }
 
         virtual float getWidth() const override {
             return shape.getSize().x;
@@ -83,9 +69,12 @@ namespace gui {
             shape.setFillColor(backgroundColor);
         }
 
-    private:
-        sf::Vector2f localPosition;
+    protected:
+        sf::RectangleShape& getShape() {
+            return shape;
+        }
 
+    private:
         bool visible;
         
         sf::RectangleShape shape;

@@ -47,14 +47,14 @@ add_library(game_library STATIC
     src/game/Player.cpp
     src/game/items/Item.cpp
     src/game/items/Storage.cpp
-    src/gui/box/Box.cpp
     src/gui/button/GenericButton.cpp
     src/gui/button/PlainButton.cpp
     src/gui/button/PlainTextButton.cpp
     src/gui/container/Container.cpp
     src/gui/font/FontManger.cpp
     src/gui/GUIBase.cpp
-    src/gui/guis/GameGUI.cpp
+    src/gui/guis/game/panes/Actionbar.cpp
+    src/gui/guis/game/GameGUI.cpp
     src/gui/Debug.cpp
 )
 
@@ -111,6 +111,7 @@ add_executable(unit_tests
     # Add your test files here
     tests/test_storage.cpp
     tests/test_item.cpp
+    tests/test_gui_containers.cpp
 )
 
 # Link GoogleTest and the main sources for testing

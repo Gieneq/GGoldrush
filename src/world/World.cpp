@@ -95,8 +95,14 @@ namespace world {
             }
         }
 
-        const auto forest1 = objectsBuilder->createResourcerForst({0, 1});
+        const auto forest1 = objectsBuilder->createResourcerForst({0, 0});
         structures.push_back(forest1);
+        const auto forest2 = objectsBuilder->createResourcerForst({1, 0});
+        structures.push_back(forest2);
+        const auto forest3 = objectsBuilder->createResourcerForst({0, 1});
+        structures.push_back(forest3);
+        const auto forest4 = objectsBuilder->createResourcerForst({0, 2});
+        structures.push_back(forest4);
         
         const auto sawmill1 = objectsBuilder->createExtractorSawmill({3, 0});
         // structures.push_back(sawmill1);

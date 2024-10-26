@@ -1,10 +1,16 @@
-#include "GUIBase.hpp"
+// #include "GUIBase.hpp"
 
 
-namespace gui {
+// namespace gui {
 
-    GUIBase::GUIBase() : Container() {
-        setParent(nullptr);
-    }
+//     GUIBase::GUIBase() : Container() {
+//         background.setVisible(false);
+//         setParent(nullptr);
+//     }
     
-}
+//     void GUIBase::onResize(float newWidth, float newHeight) {
+//         setWidth(newWidth);
+//         setHeight(newHeight);
+//         Container::onResize(newWidth, newHeight);
+//     }
+// }

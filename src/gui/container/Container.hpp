@@ -5,49 +5,38 @@
 #include <SFML/Graphics.hpp>
 
 #include <gui/Drawable.hpp>
+#include <gui/box/Box.hpp>
 
 namespace gui {
 
     class Container : public Drawable {
     public:
-        Container() : Drawable() {}
+        Container();
         
         void add(Drawable* drawable);
         
+        virtual void recalculate() override {
+            background.recalculate();
+        }
+
         virtual void tick(float dt) override;
 
         virtual void draw(sf::RenderWindow& target) override;
         
         virtual void processEvents(const gui::ClickEvent& event) override;
 
-        virtual void invalidate() override;
-
-        virtual void setX(float x) override {
-            this->x = x;
-            Drawable::setX(x);
-        }
-        
-        virtual void setY(float y) override {
-            this->y = y;
-            Drawable::setY(y);
-        }
+        // virtual void onResize(float newWidth, float newHeight) override;
 
         virtual void setWidth(float width) override {
             this->width = width;
             Drawable::setWidth(width);
+            background.setWidth(width);
         }
         
         virtual void setHeight(float height) override {
             this->height = height;
             Drawable::setHeight(height);
-        }
-
-        virtual float getX() const override {
-            return x;
-        }
-        
-        virtual float getY() const override {
-            return y;
+            background.setHeight(height);
         }
 
         virtual float getWidth() const override {
@@ -60,7 +49,6 @@ namespace gui {
 
         virtual void setVisible(bool visible) override {
             this->visible = visible;
-            Drawable::setVisible(visible);
         }
 
         virtual bool isVisible() const override {
@@ -75,17 +63,24 @@ namespace gui {
             return touchable;
         }
 
+        virtual void validate() override;
+
+        virtual void invalidate() override;
+
     protected:
         std::vector<gui::Drawable*> drawables;
 
+        const gui::Box& getBackground() const {
+            return background;
+        }
+
     private:
+
+        gui::Box background;
+
         bool visible;
 
         bool touchable;
-
-        float x;
-
-        float y;
 
         float width;
 

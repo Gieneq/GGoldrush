@@ -1,70 +1,70 @@
-#pragma once
+// #pragma once
 
-#include <SFML/Graphics.hpp>
+// #include <SFML/Graphics.hpp>
 
-#include <gui/Drawable.hpp>
+// #include <gui/Drawable.hpp>
 
-#include <vector>
+// #include <vector>
 
-namespace gui {
+// namespace gui {
 
-    class ButtonClickListener;
+//     class ButtonClickListener;
 
-    class GenericButton : public Drawable {
-    public:
-        GenericButton();
+//     class GenericButton : public Drawable {
+//     public:
+//         GenericButton();
         
-        virtual void processEvents(const gui::ClickEvent& event);
+//         virtual void processEvents(const gui::ClickEvent& event);
 
-        void setOnClickListener(ButtonClickListener* listener) {
-            this->listener = listener;
-        }
+//         void setOnClickListener(ButtonClickListener* listener) {
+//             this->listener = listener;
+//         }
     
-        virtual void setVisible(bool visible) override {
-            this->visible = visible;
-            Drawable::setVisible(visible);
-        }
+//         virtual void setVisible(bool visible) override {
+//             this->visible = visible;
+//             Drawable::setVisible(visible);
+//         }
 
-        virtual bool isVisible() const override {
-            return visible;
-        }
+//         virtual bool isVisible() const override {
+//             return visible;
+//         }
 
         
-        virtual void setTouchable(bool touchable) override {
-            this->touchable = touchable;
-        }
+//         virtual void setTouchable(bool touchable) override {
+//             this->touchable = touchable;
+//         }
         
-        virtual bool isTouchable() const override {
-            return touchable;
-        }
+//         virtual bool isTouchable() const override {
+//             return touchable;
+//         }
 
-        bool isPressed() const {
-            return pressed;
-        }
+//         bool isPressed() const {
+//             return pressed;
+//         }
 
-    protected:
-        virtual void uponHover() {}
+//     protected:
+//         virtual void uponHover() {}
 
-        virtual void uponPress() {}
+//         virtual void uponPress() {}
 
-        virtual void uponRelease() {}
+//         virtual void uponRelease() {}
 
-    private:
-        ButtonClickListener* listener;
+//     private:
+//         ButtonClickListener* listener;
 
-        bool visible;
+//         bool visible;
 
-        bool touchable;
+//         bool touchable;
 
-        bool pressed;
-    };
+//         bool pressed;
+//     };
 
 
-    class ButtonClickListener {
-    public:
-        ButtonClickListener() {}
-        ~ButtonClickListener() = default;
+//     class ButtonClickListener {
+//     public:
+//         ButtonClickListener() {}
+//         ~ButtonClickListener() = default;
 
-        virtual void onButtonClicked(gui::GenericButton* button) = 0;
-    };
-}
+//         virtual void onButtonClicked(gui::GenericButton* button) = 0;
+//     };
+// }

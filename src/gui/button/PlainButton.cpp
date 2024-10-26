@@ -1,22 +1,22 @@
-#include "PlainButton.hpp"
+// #include "PlainButton.hpp"
 
-#include <iostream>
+// #include <iostream>
 
-namespace gui {
+// namespace gui {
 
-    void PlainButton::draw(sf::RenderWindow& target) {
-        target.draw(shape);
-    }
+//     void PlainButton::draw(sf::RenderWindow& target) {
+//         target.draw(shape);
+//     }
 
-    void PlainButton::uponHover() {
+//     void PlainButton::uponHover() {
 
-    }
+//     }
 
-    void PlainButton::uponPress() {
-        shape.setFillColor(pressedColor);
-    }
+//     void PlainButton::uponPress() {
+//         shape.setFillColor(pressedColor);
+//     }
 
-    void PlainButton::uponRelease() {
-        shape.setFillColor(idleColor);
-    }
-}
+//     void PlainButton::uponRelease() {
+//         shape.setFillColor(idleColor);
+//     }
+// }

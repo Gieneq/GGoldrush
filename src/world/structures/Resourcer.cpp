@@ -67,7 +67,7 @@ namespace world {
     void Resourcer::onReleasedLMB() {
         Structure::onReleasedLMB();
         if (!extracting) {
-            extractingCounter = 80;
+            extractingCounter = 98;
             extracting = true;
             manualExtractIcon.setVisible(true);
             manualExtractIcon.start();

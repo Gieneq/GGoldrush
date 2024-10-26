@@ -50,7 +50,7 @@ namespace world {
             tileset, 
             0, 
             game::ItemType::RAW_WOOD, 
-            gfx::AnimatedSprite{tilesetExtractionIcon, std::make_pair<size_t, size_t>(0, 8)});
+            gfx::AnimatedSprite{tilesetExtractionIcon, std::make_pair<size_t, size_t>(0, 8), 40});
     }
 
 

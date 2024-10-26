@@ -19,12 +19,11 @@ namespace gfx {
             this->visible = visibility;
         }
 
-        void setPosition(const sf::Vector2f& position) {
-            sprite.setPosition(position);
-        }
+        void setPosition(const sf::Vector2f& position);
 
         void start() {
             recentFrameTimeTicks = 0;
+            currentFrameIndex = 0;
             running = true;
         }
 

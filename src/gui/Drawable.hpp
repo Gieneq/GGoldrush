@@ -4,28 +4,30 @@
 #include <iostream>
 #include <string>
 #include <sstream>
+#include <gui/Style.hpp>
 
 namespace gui {
 
     class Drawable {
     public:
-        Drawable() {
-            invalidate();
-        }
+        Drawable() : localPosition{0, 0}, parent{nullptr} {}
         
         ~Drawable() = default;
 
         virtual void setParent(Drawable* parent) {
             this->parent = parent;
-            invalidate();
+            invalidate(); //will need recalculate
         }
         
         virtual void tick(float dt) {}
 
         virtual void draw(sf::RenderWindow& target) = 0;
         
-        virtual void processEvents(const gui::ClickEvent& event) {};
+        virtual void processEvents(const gui::ClickEvent& event) {}
         
+        
+        // virtual void onResize(float newWidth, float newHeight) {}
+
 
         void setPosition(float x, float y, float width, float height) {
             setX(x);
@@ -35,15 +37,17 @@ namespace gui {
         }
 
         bool isPointInsideGlobally(float gloabl_x, float gloabl_y) {
-            return (gloabl_x >= getGloblX()) && (gloabl_x < (getGloblX() + getWidth())) 
+            return (gloabl_x >= getGlobalX()) && (gloabl_x < (getGlobalX() + getWidth())) 
                 && (gloabl_y >= getGlobalY()) && (gloabl_y < (getGlobalY() + getHeight()));
         }
 
         virtual void setX(float x) {
+            localPosition.x = x;
             invalidate();
         }
         
         virtual void setY(float y) {
+            localPosition.y = y;
             invalidate();
         }
         
@@ -55,18 +59,22 @@ namespace gui {
             invalidate();
         }
                 
-        virtual float getX() const = 0;
+        virtual float getX() const {
+            return localPosition.x;
+        }
         
-        virtual float getY() const = 0;
+        virtual float getY() const {
+            return localPosition.y;
+        }
 
         virtual float getWidth() const = 0;
         
         virtual float getHeight() const = 0;
 
         
-        float getGloblX() const {
+        float getGlobalX() const {
             if (parent) {
-                return parent->getGloblX() + getX();
+                return parent->getGlobalX() + getX();
             }
             return getX();
         }
@@ -80,9 +88,7 @@ namespace gui {
         }
 
         
-        virtual void setVisible(bool visible) {
-            invalidate();
-        }
+        virtual void setVisible(bool visible) = 0;
 
         virtual bool isVisible() const = 0;
 
@@ -91,22 +97,44 @@ namespace gui {
         
         virtual bool isTouchable() const = 0;
 
-        virtual void invalidate() {}
+        virtual void invalidate() {
+            valid = false;
+        }
+
+        bool hasParent() const {
+            return parent != nullptr;
+        }
 
         virtual std::string toString() const {
             std::ostringstream ss;
             ss << "Drawable: "
                << "Position (" << getX() << ", " << getY() << "), "
-               << "GlobalPosition (" << getGloblX() << ", " << getGlobalY() << "), "
+               << "GlobalPosition (" << getGlobalX() << ", " << getGlobalY() << "), "
                << "Size (" << getWidth() << "x" << getHeight() << "), "
                << "Visible: " << (isVisible() ? "Yes" : "No") << ", "
                << "Touchable: " << (isTouchable() ? "Yes" : "No");
             return ss.str();
         }
         
+        virtual void recalculate() {}
+        
+        virtual void validate() {
+            if (!valid) {
+                recalculate();
+                valid = true;
+            }
+        }
+
+    protected:
+        bool isValid() const {
+            return valid;
+        }
+        
+        Drawable* parent;
 
     private:
-        Drawable* parent{nullptr};
+        bool valid{false};
+        sf::Vector2f localPosition;
     };
 
     inline std::ostream& operator<<(std::ostream& os, const Drawable& drawable) {

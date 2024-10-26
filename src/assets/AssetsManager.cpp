@@ -48,7 +48,7 @@ namespace assets {
 
         tilesetCommon = new Tileset(textureCommon, props::BASE_TILESIZE);
         tilesetItems = new Tileset(textureItems, props::BASE_TILESIZE);
-        tilesetExtractions = new Tileset(textureExtractions, {64, 64});
+        tilesetExtractions = new Tileset(textureExtractions, {128, 128});
         tilesetObjects1x4 = new Tileset(textureObjects1x4, {1 * props::BASE_TILESIZE.x, 4 * props::BASE_TILESIZE.y});
         tilesetObjects2x4 = new Tileset(textureObjects2x4, {2 * props::BASE_TILESIZE.x, 4 * props::BASE_TILESIZE.y});
         tilesetObjects2x2 = new Tileset(textureObjects2x2, {2 * props::BASE_TILESIZE.x, 2 * props::BASE_TILESIZE.y});
