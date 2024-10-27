@@ -23,7 +23,7 @@ int main() {
     world.getCamera().sameAs(windowView);
     world.getCamera().lookAt({0,0});
 
-    // gui::GameGUI gameGUI(window);
+    gui::GameGUI gameGUI(window);
     gui::ClickEventsExtractor clicEventsExtractor;
 
     sf::Clock loopTimeMeasure;
@@ -39,6 +39,12 @@ int main() {
             else if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::F1) {
                 gui::DebugOverlay::get().visible = !gui::DebugOverlay::get().visible;
             }
+            else if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::F2) {
+                gameGUI.setScale(gameGUI.getScale() + 10.0F);
+            } 
+            else if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::F3) {
+                gameGUI.setScale(gameGUI.getScale() - 10.0F);
+            } 
             else if (event.type == sf::Event::Resized) {
                 if (event.size.width < minimalSize.x) {
                     event.size.width = minimalSize.x;
@@ -54,8 +60,7 @@ int main() {
                 std::cout << "Resized to: " << newWidth << " x " << newHeight << std::endl;
                 windowView.setSize(newWidth, newHeight);
                 windowView.setCenter({newWidth/2, newHeight/2});
-                // gameGUI.setPosition(0, 0, newWidth, newHeight);
-                // gameGUI.onResize(newWidth, newHeight);
+                gameGUI.setPosition(0, 0, newWidth, newHeight);
                 
                 world.getCamera().sameAs(windowView);
             }
@@ -76,7 +81,7 @@ int main() {
                 /* LMB events */
                 const auto clickEventResult = clicEventsExtractor.extract(event, mouseScreenPosition);
                 if (clickEventResult.has_value()) {
-                    // gameGUI.processEvents(clickEventResult.value());
+                    gameGUI.processEvents(clickEventResult.value());
                 }
 
                 /* Other events */
@@ -97,8 +102,9 @@ int main() {
 
         /* GUI ontop */
         window.setView(windowView);
-        // gameGUI.tick(deltaTimeSec);
-        // gameGUI.draw(window);
+        gameGUI.tick(deltaTimeSec);
+        gameGUI.validate();
+        gameGUI.draw(window);
         gui::DebugOverlay::get().draw(window);
         window.display();
     }

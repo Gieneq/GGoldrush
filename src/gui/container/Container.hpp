@@ -55,6 +55,10 @@ namespace gui {
             return visible;
         }
 
+        void backgroundSetVisible(bool visible) {
+            background.setVisible(visible);
+        }
+
         virtual void setTouchable(bool touchable) override {
             this->touchable = touchable;
         }

@@ -1,17 +1,20 @@
-// #include "GameGUI.hpp"
+#include "GameGUI.hpp"
 
-// #include <iostream>
+#include <iostream>
 
-// #include <string>
+#include <string>
 
-// namespace gui {
+namespace gui {
 
-//     GameGUI::GameGUI(const sf::RenderWindow& window) : GUIBase() {
-//         setParent(nullptr);
-//         setPosition(0, 0, window.getSize().x, window.getSize().y);
+    GameGUI::GameGUI(const sf::RenderWindow& window) : GUIBase() {
+        setParent(nullptr);
+        setPosition(0, 0, window.getSize().x, window.getSize().y);
 
-//         add(&actionbar);
-//     }
+        add(&boxleft);
+        add(&boxCenter);
+        add(&boxRight);
+        // boxCenter.setC
+    }
     
 //     void GameGUI::onButtonClicked(gui::GenericButton* button) {
 //         std::cout << "Button clicked: " << *button << std::endl;
@@ -23,4 +26,4 @@
 //         GUIBase::setWidth(width);
 //     }
 
-// }
+}

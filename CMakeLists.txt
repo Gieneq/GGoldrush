@@ -112,6 +112,7 @@ add_executable(unit_tests
     tests/test_storage.cpp
     tests/test_item.cpp
     tests/test_gui_containers.cpp
+    tests/test_gui_containers_customized.cpp
 )
 
 # Link GoogleTest and the main sources for testing
